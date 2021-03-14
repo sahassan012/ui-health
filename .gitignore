@@ -1,3 +1,5 @@
-__pycache_/_
+__pycache__/
+*.py[cod]
+*$py.class
 website/__pycache__
 website/database.db
