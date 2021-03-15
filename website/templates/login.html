@@ -29,17 +29,16 @@
     <!-- Admin/Nurse/Patient Toggle -->
     <div class="form-group">
       <label for="usertype">Account Type:</label>
-      <select name="usertype" id="usertype">
+      <select name="usertype" id="usertype" style="margin-left:5px">
         <option value="admin">Admin</option>
         <option value="nurse">Nurse</option>
         <option value="patient">Patient</option>
       </select>
     <div>
-    <br />
-    <br />
-    <button type="submit" class="btn btn-primary">Login</button>
-    <button  class="btn btn-primary">New Patient? Sign up here</button>
-
+    <div style="margin-top:10px">
+      <button type="submit" class="btn btn-primary">Login</button>
+      <button  class="btn btn-primary">New Patient? Sign up here</button>
+    </div>
   </div>
 </form>
 {% endblock %}
