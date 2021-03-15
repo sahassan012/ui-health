@@ -12,7 +12,8 @@ DB_NAME = "database.db"
 
 @views.route('/register_nurse')
 def register_nurse():
-    if not current_user.is_admin:
+    
+    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
         return render_template("403.html", user=current_user)
     nurses = Nurse.query.all()
     return render_template("register_nurse.html", user=current_user, nurses = nurses)
