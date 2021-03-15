@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
+from sqlalchemy import or_
 from .models import User, Nurse
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
@@ -9,11 +10,22 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
 
-        user = User.query.filter_by(email=email).first()
-        if user:
+        username = request.form.get('username')
+        password = request.form.get('password')
+    
+        nurse = Nurse.query.filter(or_(Nurse.username == username, Nurse.email == username)).first()
+        user = User.query.filter_by(email=username).first()
+
+        if nurse:
+            user = User.query.filter_by(id=nurse.employeeID).first()
+            if check_password_hash(user.password, password):
+                flash('Logged in successfully!', category='success')
+                login_user(user, remember=True)
+                return redirect(url_for('views.home'))
+            else:
+                flash('Incorrect password, try again.', category='error')
+        elif user:
             if check_password_hash(user.password, password):
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
@@ -21,7 +33,7 @@ def login():
             else:
                 flash('Incorrect password, try again.', category='error')
         else:
-            flash('Email does not exist.', category='error')
+            flash('Username/Email does not exist.', category='error')
 
     return render_template("login.html", user=current_user)
 

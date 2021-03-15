@@ -13,6 +13,7 @@ class User(db.Model, UserMixin):
 
 class Nurse(db.Model, UserMixin):
     employeeID = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True)
     username = db.Column(db.String(150))
     gender = db.Column(db.String(150))
     name = db.Column(db.String(150))

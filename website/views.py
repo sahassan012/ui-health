@@ -11,7 +11,7 @@ views = Blueprint('views', __name__)
 DB_NAME = "database.db"
 
 @views.route('/register_nurse')
-def Index():
+def register_nurse():
     if not current_user.is_admin:
         return render_template("403.html", user=current_user)
     nurses = Nurse.query.all()
@@ -40,25 +40,29 @@ def create_nurse():
         phoneNumber = request.form['phoneNumber']
         address = request.form['address']
 
-        nurse = Nurse.query.filter_by(username=username).first()
-        if nurse:
+        nurse_username = Nurse.query.filter_by(username=username).first()
+        nurse_email = Nurse.query.filter_by(username=email).first()
+        if nurse_username:
             flash('Username given already exists.', category='error')
+        elif nurse_email:
+            flash('Email given already exists.', category='error')
         else:
             user = create_user(email, name, password, is_admin=False, is_patient=False, is_nurse=True)
             if user == None:
                 flash('Something went wrong!', category='error')
             else:
-                new_nurse = Nurse(employeeID = user.id, username=username, gender=gender, name=name, age=age, phoneNumber=phoneNumber, address=address)
+                new_nurse = Nurse(employeeID = user.id, email=email, username=username, gender=gender, name=name, age=age, phoneNumber=phoneNumber, address=address)
                 db.session.add(new_nurse)
                 db.session.commit()
                 flash('Nurse created!', category='success')
-        return redirect(url_for('views.Index'))
+        return redirect(url_for('views.register_nurse'))
 
 
 @views.route('/update', methods = ['GET', 'POST'])
 def update_nurse():
     if request.method == 'POST':
         data = Nurse.query.get(request.form.get('employeeID'))
+        data.email = request.form['email']
         data.username = request.form['username']
         data.gender = request.form['gender']
         data.name = request.form['name']
@@ -67,7 +71,7 @@ def update_nurse():
         data.address = request.form['address']
         db.session.commit()
         flash("Nurse updated Sucessfully!")
-        return redirect(url_for('views.Index'))
+        return redirect(url_for('views.register_nurse'))
 
 @views.route('/delete/<id>/', methods = ['GET', 'POST'])
 def delete_nurse(id):
@@ -76,7 +80,7 @@ def delete_nurse(id):
     db.session.commit()
     delete_user(id)
     flash("Nurse Deleted Successfully")
-    return redirect(url_for('views.Index'))
+    return redirect(url_for('views.register_nurse'))
 
 def create_user(email, first_name, password, is_admin, is_patient, is_nurse):
     user = User.query.filter_by(email=email).first()
