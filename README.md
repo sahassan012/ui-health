@@ -4,5 +4,5 @@
     ```Shell
     pip install -r requirements.txt
     ```
-2. Open Visual Studio and run debugger with Flask config.
-4. Open http://127.0.0.1:5000/ in a browser.
+2. Open Visual Studio and click Run->Start Debugger and then choose Flask config(use main.py).
+3. Open http://127.0.0.1:5000/ in a browser
