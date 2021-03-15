@@ -44,7 +44,7 @@ def create_nurse():
         if nurse:
             flash('Username given already exists.', category='error')
         else:
-            user = create_user(email, name, password, is_admin=True)
+            user = create_user(email, name, password, is_admin=False, is_patient=False, is_nurse=True)
             if user == None:
                 flash('Something went wrong!', category='error')
             else:
@@ -65,7 +65,6 @@ def update_nurse():
         data.age = request.form['age']
         data.phoneNumber = request.form['phoneNumber']
         data.address = request.form['address']
-
         db.session.commit()
         flash("Nurse updated Sucessfully!")
         return redirect(url_for('views.Index'))
@@ -79,7 +78,7 @@ def delete_nurse(id):
     flash("Nurse Deleted Successfully")
     return redirect(url_for('views.Index'))
 
-def create_user(email, first_name, password, is_admin=False):
+def create_user(email, first_name, password, is_admin, is_patient, is_nurse):
     user = User.query.filter_by(email=email).first()
     if user:
         flash('Email already exists.', category='error')
@@ -90,7 +89,7 @@ def create_user(email, first_name, password, is_admin=False):
     elif len(password) < 5:
         flash('Password must be at least 7 characters.', category='error')
     else:
-        new_user = User(email=email, first_name=first_name, password=generate_password_hash(password, method='sha256'))
+        new_user = User(email=email, first_name=first_name, password=generate_password_hash(password, method='sha256'), is_admin=is_admin, is_patient=is_patient, is_nurse=is_nurse)
         db.session.add(new_user)
         db.session.commit()
         flash('Account created!', category='success')
