@@ -11,29 +11,51 @@ auth = Blueprint('auth', __name__)
 def login():
     if request.method == 'POST':
 
+        usertype = request.form.get('usertype')
         username = request.form.get('username')
         password = request.form.get('password')
-    
-        nurse = Nurse.query.filter(or_(Nurse.username == username, Nurse.email == username)).first()
-        user = User.query.filter_by(email=username).first()
 
-        if nurse:
-            user = User.query.filter_by(id=nurse.employeeID).first()
-            if check_password_hash(user.password, password):
-                flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+        if usertype == 'nurse':
+            nurse = Nurse.query.filter(or_(Nurse.username == username, Nurse.email == username)).first()
+            if nurse:
+                user = User.query.filter_by(id=nurse.employeeID).first()
+                if check_password_hash(user.password, password):
+                    if user.is_nurse:
+                        flash('Logged in successfully as Nurse!', category='success')
+                        login_user(user, remember=True)
+                        return redirect(url_for('views.home'))
+                    else:
+                        flash('Choose correct account type.', category='error')
+                else:
+                    flash('Incorrect password, try again.', category='error')
+        elif usertype == 'admin':
+            user = User.query.filter_by(email=username).first()
+            if user:
+                if check_password_hash(user.password, password):
+                    if user.is_admin:
+                        flash('Logged in successfully as Admin!', category='success')
+                        login_user(user, remember=True)
+                        return redirect(url_for('views.home'))
+                    else:
+                        flash('You don\'t have admin access. Choose correct account type.', category='error')
+                else:
+                    flash('Incorrect password, try again.', category='error')
             else:
-                flash('Incorrect password, try again.', category='error')
-        elif user:
-            if check_password_hash(user.password, password):
-                flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
+                flash('Username/Email does not exist.', category='error')
+        if usertype == 'patient':
+            user = User.query.filter_by(email=username).first()
+            if user:
+                if check_password_hash(user.password, password):
+                    if user.is_patient:
+                        flash('Logged in successfully as Patient!', category='success')
+                        login_user(user, remember=True)
+                        return redirect(url_for('views.home'))
+                    else:
+                        flash('Choose correct account type.', category='error')
+                else:
+                    flash('Incorrect password, try again.', category='error')
             else:
-                flash('Incorrect password, try again.', category='error')
-        else:
-            flash('Username/Email does not exist.', category='error')
+                flash('Username/Email does not exist.', category='error')
 
     return render_template("login.html", user=current_user)
 
