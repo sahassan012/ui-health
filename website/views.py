@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from .models import Nurse, User
+from .models import Nurse, User, Patient
 from . import db
 import json
 
@@ -106,3 +106,12 @@ def delete_user(id):
     db.session.delete(data)
     db.session.commit()
     flash("User Deleted Successfully")
+
+def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age, gender, race, occupation_class, medical_history_description, phone_number, address):
+    new_patient = Patient(patientID=patientID, username=username, first_name=first_name, mi_name=mi_name, last_name=last_name, 
+                          SSN=SSN, age=age, gender=gender, race=race, occupation_class=occupation_class, 
+                          medical_history_description=medical_history_description, phone_number=phone_number, address=address)
+    db.session.add(new_patient)
+    db.session.commit()
+    flash('Patient created!', category='success')
+
