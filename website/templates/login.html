@@ -8,7 +8,23 @@
     <link rel="stylesheet" style="text/css" href="../static/css/style.css"/>
     <script type="text/javascript" src="{{ url_for('static', filename='site.js') }}"></script>
   </head>
-
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+    messages %} {% for category, message in messages %} {% if category ==
+    'error' %}
+    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% else %}
+    <div class="alert alert-success alter-dismissable fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endif %} {% endfor %} {% endif %} {% endwith %}
   <body>
     <form method="POST">
       <div class="main-container">
@@ -22,7 +38,7 @@
             <button id="registerButton"><a style="color: #3b3737;" href="/sign-up">Register</a></button>
           </div>
           <div class="white-panel">
-            <div class="login-show">
+            <div class="login-show show-log-panel">
               <h2>LOGIN</h2>
               <div class="form-group">
                 <input
