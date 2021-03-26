@@ -1,158 +1,180 @@
 {% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block
 content %}
+<style>
+  .white-panel{
+    width: 70% !important;
+    right: calc(15%) !important;
+    height: 1972px !important;
+  }
+  .login-reg-panel{
+    height:1875px !important;
+    top: 100px;
+    transform: translateY(0%) !important;
+    background-color: rgba(255, 255, 255, 0.9);
+
+  }
+</style>
 <form method="POST">
-  <h3 align="center">Patient Sign Up</h3>
-  <div class="form-group">
-    <label for="email">Email Address</label>
-    <input
-      type="text"
-      class="form-control"
-      id="email"
-      name="email"
-      placeholder="Enter email"
-    />
+  <div class="login-reg-panel">
+    <div class="white-panel">
+      <div class="login-show show-log-panel">
+        <div style="padding-top:60px">
+          <h2>Create a New Account</h2>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="text"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="Enter email"
+            />
+          </div>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              placeholder="Enter Username"
+            />
+          </div> 
+          <div class="form-group">
+            <label for="password1">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password1"
+              name="password1"
+              placeholder="Enter password"
+            />
+          </div>
+          <div class="form-group">
+            <label for="password2">Password (Confirm)</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password2"
+              name="password2"
+              placeholder="Confirm password"
+            />
+          </div>
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="firstName"
+              name="firstName"
+              placeholder="Enter First name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="miName">Middle Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="miName"
+              name="miName"
+              placeholder="Enter Middle name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="lastName"
+              name="lastName"
+              placeholder="Enter Last name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="ssn">SSN</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ssn"
+              name="ssn"
+              placeholder="Enter Social Security #"
+            />
+          </div>
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input
+              type="text"
+              class="form-control"
+              id="age"
+              name="age"
+              placeholder="Enter Age"
+            />
+          </div>
+          <div class="form-group">
+            <label for="gender">Gender</label>
+            <input
+              type="text"
+              class="form-control"
+              id="gender"
+              name="gender"
+              placeholder="Enter Gender"
+            />
+          </div>
+          <div class="form-group">
+            <label for="race">Race</label>
+            <input
+              type="text"
+              class="form-control"
+              id="race"
+              name="race"
+              placeholder="Enter Race"
+            />
+          </div>
+          <div class="form-group">
+            <label for="occupationClass">Occupation Class</label>
+            <input
+              type="text"
+              class="form-control"
+              id="occupationClass"
+              name="occupationClass"
+              placeholder="Enter Occupation Class"
+            />
+          </div>
+          <div class="form-group">
+            <label for="medicalHistoryDescription">Medical History Description</label>
+            <input
+              type="text"
+              class="form-control"
+              id="medicalHistoryDescription"
+              name="medicalHistoryDescription"
+              placeholder="Enter Medical History Description"
+            />
+          </div>
+          <div class="form-group">
+            <label for="phoneNumber">Phone Number</label>
+            <input
+              type="text"
+              class="form-control"
+              id="phoneNumber"
+              name="phoneNumber"
+              placeholder="Enter Phone Number"
+            />
+          </div>
+          <div class="form-group">
+            <label for="address">Address</label>
+            <input
+              type="text"
+              class="form-control"
+              id="address"
+              name="address"
+              placeholder="Enter Address"
+            />
+          </div>
+          <br />
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="username">Username</label>
-    <input
-      type="text"
-      class="form-control"
-      id="username"
-      name="username"
-      placeholder="Enter Username"
-    />
-  </div> 
-  <div class="form-group">
-    <label for="password1">Password</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password1"
-      name="password1"
-      placeholder="Enter password"
-    />
-  </div>
-  <div class="form-group">
-    <label for="password2">Password (Confirm)</label>
-    <input
-      type="password"
-      class="form-control"
-      id="password2"
-      name="password2"
-      placeholder="Confirm password"
-    />
-  </div>
-  <div class="form-group">
-    <label for="firstName">First Name</label>
-    <input
-      type="text"
-      class="form-control"
-      id="firstName"
-      name="firstName"
-      placeholder="Enter First name"
-    />
-  </div>
-  <div class="form-group">
-    <label for="miName">Middle Name</label>
-    <input
-      type="text"
-      class="form-control"
-      id="miName"
-      name="miName"
-      placeholder="Enter Middle name"
-    />
-  </div>
-  <div class="form-group">
-    <label for="lastName">Last Name</label>
-    <input
-      type="text"
-      class="form-control"
-      id="lastName"
-      name="lastName"
-      placeholder="Enter Last name"
-    />
-  </div>
-  <div class="form-group">
-    <label for="ssn">SSN</label>
-    <input
-      type="text"
-      class="form-control"
-      id="ssn"
-      name="ssn"
-      placeholder="Enter Social Security #"
-    />
-  </div>
-  <div class="form-group">
-    <label for="age">Age</label>
-    <input
-      type="text"
-      class="form-control"
-      id="age"
-      name="age"
-      placeholder="Enter Age"
-    />
-  </div>
-  <div class="form-group">
-    <label for="gender">Gender</label>
-    <input
-      type="text"
-      class="form-control"
-      id="gender"
-      name="gender"
-      placeholder="Enter Gender"
-    />
-  </div>
-  <div class="form-group">
-    <label for="race">Race</label>
-    <input
-      type="text"
-      class="form-control"
-      id="race"
-      name="race"
-      placeholder="Enter Race"
-    />
-  </div>
-  <div class="form-group">
-    <label for="occupationClass">Occupation Class</label>
-    <input
-      type="text"
-      class="form-control"
-      id="occupationClass"
-      name="occupationClass"
-      placeholder="Enter Occupation Class"
-    />
-  </div>
-  <div class="form-group">
-    <label for="medicalHistoryDescription">Medical History Description</label>
-    <input
-      type="text"
-      class="form-control"
-      id="medicalHistoryDescription"
-      name="medicalHistoryDescription"
-      placeholder="Enter Medical History Description"
-    />
-  </div>
-  <div class="form-group">
-    <label for="phoneNumber">Phone Number</label>
-    <input
-      type="text"
-      class="form-control"
-      id="phoneNumber"
-      name="phoneNumber"
-      placeholder="Enter Phone Number"
-    />
-  </div>
-  <div class="form-group">
-    <label for="address">Address</label>
-    <input
-      type="text"
-      class="form-control"
-      id="address"
-      name="address"
-      placeholder="Enter Address"
-    />
-  </div>
-  <br />
-  <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 {% endblock %}
