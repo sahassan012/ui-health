@@ -64,13 +64,10 @@ a{
     text-align:left;
 }
 .register-info-box{
-    width:30%;
-    padding:0 50px;
-    top:35%;
+    width:25%;
     right:0;
     position:absolute;
     text-align:left;
-    
 }
 .right-log{right:50px !important;}
 

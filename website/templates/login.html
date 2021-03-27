@@ -5,8 +5,8 @@
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" style="text/css" href="../static/css/style.css"/>
-    <script type="text/javascript" src="../static/site.js"></script>
+    <link rel="stylesheet" style="text/css" href="/static/css/style.css"/>
+    <script type="text/javascript" src="/static/site.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
@@ -36,16 +36,6 @@
           <img src="/static/img/main-logo-1.png" width="445" height="250">
         </div>
         <div class="login-reg-panel">
-          <div class="register-info-box" style="display: flex">
-            <div style="margin-left: -255px; margin-right: 85px; margin-top: -45px">
-              <img src="/static/img/smaller-logo-gray.png" width="230" height="230">
-            </div>
-            <div>
-              <h2>Don't have an account?</h2>
-              <p>Sign up here</p>
-              <button id="registerButton"><a style="color: #3b3737;" href="/sign-up">Register</a></button>
-            </div>
-          </div>
           <div class="white-panel">
             <div class="login-show show-log-panel">
               <div style="padding-top:60px">
@@ -85,5 +75,17 @@
         </div>
       </div>
     </form>
+    <div class="register-info-box">
+      <div style="display: flex;">
+        <div style="margin-left: -255px; margin-right: 85px; margin-top: -165px">
+          <img src="/static/img/smaller-logo-gray.png" width="230" height="230">
+        </div>
+        <div style="margin-top: -120px;">
+          <h2 style="color:#B8B8B8">Don't have an account?</h2>
+          <p style="color:#B8B8B8">Sign up here</p>
+          <a style="color: #3b3737;" href="/sign-up"><button id="registerButton">Register</button></a>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
