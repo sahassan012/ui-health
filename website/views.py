@@ -21,7 +21,6 @@ def home():
 
 @views.route('/register-nurse')
 def register_nurse():
-    
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
         return render_template("403.html", user=current_user)
     nurses = Nurse.query.all()
@@ -114,3 +113,16 @@ def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age
     db.session.add(new_patient)
     db.session.commit()
     flash('Patient created!', category='success')
+
+@views.route('/my-account', methods = ['GET', 'POST'])
+def my_account():
+    if current_user.is_patient:
+        patient = Patient.query.filter_by(patientID = current_user.id).first()
+        return render_template("my_account.html", user=patient)
+    elif current_user.is_admin:
+        return render_template("my_account.html", user=current_user)
+    elif current_user.is_nurse:
+        nurse = Nurse.query.filter_by(employeeID = current_user.id).first()
+        return render_template("my_account.html", user=current_user)
+    else:
+        return render_template("403.html")
