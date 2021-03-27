@@ -10,13 +10,6 @@ views = Blueprint('views', __name__)
 
 DB_NAME = "database.db"
 
-@views.route('/register_nurse')
-def register_nurse():
-    
-    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
-        return render_template("403.html", user=current_user)
-    nurses = Nurse.query.all()
-    return render_template("register_nurse.html", user=current_user, nurses = nurses)
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -26,8 +19,15 @@ def home():
         return render_template("admin.html", user=current_user)
     return render_template("home.html", user=current_user)
 
+@views.route('/register-nurse')
+def register_nurse():
+    
+    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
+        return render_template("403.html", user=current_user)
+    nurses = Nurse.query.all()
+    return render_template("register_nurse.html", user=current_user, nurses = nurses)
 
-@views.route('/insert', methods = ['POST'])
+@views.route('/create-nurse', methods = ['POST'])
 def create_nurse():
     if not current_user.is_admin:
         return render_template("403.html", user=current_user)
@@ -59,7 +59,7 @@ def create_nurse():
         return redirect(url_for('views.register_nurse'))
 
 
-@views.route('/update', methods = ['GET', 'POST'])
+@views.route('/update-nurse', methods = ['GET', 'POST'])
 def update_nurse():
     if request.method == 'POST':
         data = Nurse.query.get(request.form.get('employeeID'))
@@ -74,7 +74,7 @@ def update_nurse():
         flash("Nurse updated Sucessfully!")
         return redirect(url_for('views.register_nurse'))
 
-@views.route('/delete/<id>/', methods = ['GET', 'POST'])
+@views.route('/delete-nurse/<id>/', methods = ['GET', 'POST'])
 def delete_nurse(id):
     data = Nurse.query.get(id)
     db.session.delete(data)
@@ -114,4 +114,3 @@ def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age
     db.session.add(new_patient)
     db.session.commit()
     flash('Patient created!', category='success')
-
