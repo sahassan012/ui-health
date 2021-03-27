@@ -58,11 +58,17 @@
         <!-- Right header -->
         <div class="navbar-nav ml-auto">
           {% if user.is_authenticated %}
+            <div class="dropdown">
+              <button onclick="myFunction()" class="dropbtn nav-item nav-link">My Account</button>
+              <div id="myDropdown" class="dropdown-content">
+                <a href="#">Update My Info</a>
+                <a href="#">Log out</a>
+              </div>
+            </div>
             <a class="nav-item nav-link" style="padding-top:10px">Hello, {{user.first_name}}!</a>
             <img src="/static/img/smaller-logo.png" width="45" height="45" style="overflow: hidden;">
           {% endif %}
-        </div>
-        
+          </div>
       </div>
     </nav>
 
