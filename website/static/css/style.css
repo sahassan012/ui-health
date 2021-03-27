@@ -11,6 +11,9 @@ body{
 	position:relative;
     overflow-y: hidden;
 }
+.jumbotron{
+    background-color: white !important;
+}
 a{
   text-decoration:none;
   color:#444444;
