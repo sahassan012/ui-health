@@ -45,10 +45,8 @@
           {% if user.is_admin %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="register_nurse" href="/register-nurse">Register Nurse</a>
-          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% elif user.is_authenticated %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
           {% else %}
           <a class="nav-item nav-link" id="login" href="/login">Login</a>
           <a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
@@ -61,8 +59,8 @@
             <div class="dropdown">
               <button onclick="myFunction()" class="dropbtn nav-item nav-link">My Account</button>
               <div id="myDropdown" class="dropdown-content">
-                <a href="#">Update My Info</a>
-                <a href="#">Log out</a>
+                <a href="/my-account">Update My Info</a>
+                <a id="logout" href="/logout">Logout</a>
               </div>
             </div>
             <a class="nav-item nav-link" style="padding-top:10px">Hello, {{user.first_name}}!</a>
