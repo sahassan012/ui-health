@@ -126,3 +126,28 @@ def my_account():
         return render_template("my_account.html", user_nurse=nurse, user=current_user)
     else:
         return render_template("403.html")
+
+@views.route('/update-account-info', methods = ['GET', 'POST'])
+def update_account_info():
+    if request.method == 'POST':
+        if current_user.is_nurse:
+            data = Nurse.query.get(request.form.get('employeeID'))
+            data.phoneNumber = request.form['phoneNumber']
+            data.address = request.form['address']
+        elif current_user.is_patient:
+            data = Patient.query.get(request.form.get('patientID'))
+            data.username = request.form['username']
+            data.first_name = request.form['firstName']
+            data.mi_name = request.form['miName']
+            data.last_name = request.form['lastName']
+            data.SSN = request.form['ssn']
+            data.age = request.form['age']
+            data.gender = request.form['gender']
+            data.race = request.form['race']
+            data.occupation_class = request.form['occupationClass']
+            data.medical_history_description = request.form['medicalHistoryDescription']
+            data.phone_number = request.form['phoneNumber']
+            data.address = request.form['address']
+        db.session.commit()
+        flash("Information updated successfully.")
+        return redirect(url_for('views.my_account'))
