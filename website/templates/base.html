@@ -58,7 +58,9 @@
             <div class="dropdown">
               <button onclick="myFunction()" class="dropbtn nav-item nav-link">My Account</button>
               <div id="myDropdown" class="dropdown-content">
+                {% if not user.is_admin %}
                 <a href="/my-account">Update My Info</a>
+                {% endif %}
                 <a id="logout" href="/logout">Logout</a>
               </div>
             </div>

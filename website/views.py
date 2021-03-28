@@ -118,11 +118,11 @@ def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age
 def my_account():
     if current_user.is_patient:
         patient = Patient.query.filter_by(patientID = current_user.id).first()
-        return render_template("my_account.html", user=patient)
+        return render_template("my_account.html", user_patient=patient, user=current_user)
     elif current_user.is_admin:
         return render_template("my_account.html", user=current_user)
     elif current_user.is_nurse:
         nurse = Nurse.query.filter_by(employeeID = current_user.id).first()
-        return render_template("my_account.html", user=current_user)
+        return render_template("my_account.html", user_nurse=nurse, user=current_user)
     else:
         return render_template("403.html")
