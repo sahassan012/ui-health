@@ -1,5 +1,8 @@
 # ui-health
-
+Requirements:
+    - Python 3
+    - Visual Studio Code or CMD/Shell
+   
 1. Run the following command in your shell:
     ```Shell
     pip install -r requirements.txt
