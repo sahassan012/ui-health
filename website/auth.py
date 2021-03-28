@@ -45,7 +45,19 @@ def login():
                 flash('Username/Email does not exist.', category='error')
         if usertype == 'patient':
             user = User.query.filter_by(email=username).first()
+            patient = Patient.query.filter_by(username=username).first()
             if user:
+                if check_password_hash(user.password, password):
+                    if user.is_patient:
+                        flash('Logged in successfully as Patient!', category='success')
+                        login_user(user, remember=True)
+                        return redirect(url_for('views.home'))
+                    else:
+                        flash('Choose correct account type.', category='error')
+                else:
+                    flash('Incorrect password, try again.', category='error')
+            elif patient:
+                user = User.query.filter_by(id=patient.patientID).first()
                 if check_password_hash(user.password, password):
                     if user.is_patient:
                         flash('Logged in successfully as Patient!', category='success')
