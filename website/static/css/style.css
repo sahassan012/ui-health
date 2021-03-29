@@ -237,7 +237,12 @@ a{
         }
    }
    
-   #home:hover, #login:hover, #register_nurse:hover{
+   #home:hover, #login:hover, #register_nurse:hover, .submit-button:hover{
      background-color: #a83808;
+     border-radius: 2px;
+   }
+
+   #registerButton:hover{
+     background-color: #ddd;
      border-radius: 2px;
    }
