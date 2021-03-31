@@ -246,3 +246,7 @@ a{
      background-color: #ddd;
      border-radius: 2px;
    }
+
+   .table-dark {
+    background-color: #212529e8 !important;
+   }
