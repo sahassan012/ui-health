@@ -236,7 +236,7 @@ a{
             max-width: 90%;
         }
    }
-   
+
    #home:hover, #login:hover, #register_nurse:hover, .submit-button:hover{
      background-color: #a83808;
      border-radius: 2px;

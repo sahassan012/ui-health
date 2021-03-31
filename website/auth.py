@@ -11,11 +11,9 @@ auth = Blueprint('auth', __name__)
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-
         usertype = request.form.get('usertype')
         username = request.form.get('username')
         password = request.form.get('password')
-
         if usertype == 'nurse':
             nurse = Nurse.query.filter(or_(Nurse.username == username, Nurse.email == username)).first()
             if nurse:
@@ -69,7 +67,6 @@ def login():
                     flash('Incorrect password, try again.', category='error')
             else:
                 flash('Username/Email does not exist.', category='error')
-
     return render_template("login.html", user=current_user)
 
 

@@ -1,5 +1,13 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-    %}
-    <h1 align="center">Error 403: You are not authorized to access this page</h1>
-    {% endblock %}
-    
+
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content %}
+<style>
+    #bodyContainer {
+        overflow: hidden !important;
+    }
+</style>
+<link rel="stylesheet" style="text/css" href="../static/css/style-403.css"/>
+<div class="container">
+    <h1>4<div class="lock"><div class="top"></div><div class="bottom"></div>
+        </div>3</h1><p>Access denied - You do not have permission to view this page.</p>
+</div>
+{% endblock %}
