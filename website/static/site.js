@@ -24,7 +24,7 @@
     }
 
     // 403 Error Page
-    const interval = 500;
+    const interval = 100;
     function generateLocks() {
     const lock = document.createElement('div'),
             position = generatePosition();
