@@ -119,13 +119,11 @@ def my_account():
     if current_user.is_patient:
         patient = Patient.query.filter_by(patientID = current_user.id).first()
         return render_template("my_account.html", user_patient=patient, user=current_user)
-    elif current_user.is_admin:
-        return render_template("my_account.html", user=current_user)
     elif current_user.is_nurse:
         nurse = Nurse.query.filter_by(employeeID = current_user.id).first()
         return render_template("my_account.html", user_nurse=nurse, user=current_user)
     else:
-        return render_template("403.html")
+        return render_template("403.html", user=current_user)
 
 @views.route('/update-account-info', methods = ['GET', 'POST'])
 def update_account_info():
