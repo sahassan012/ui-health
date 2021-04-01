@@ -248,5 +248,13 @@ a{
    }
 
    .table-dark {
-    background-color: #212529e8 !important;
+        background-color: #212529e8 !important;
    }
+
+   h1{
+       padding-top: 25px;
+   }
+
+   .table{
+        box-shadow: 0 0 10px 5px rgba(206, 27, 0, 0.39) !important;
+    }
