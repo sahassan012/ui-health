@@ -149,3 +149,10 @@ def update_account_info():
         db.session.commit()
         flash("Information updated successfully.")
         return redirect(url_for('views.my_account'))
+
+@views.route('/view-patients')
+def view_patients():
+    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
+        return render_template("403.html", user=current_user)
+    patients = Patient.query.all()
+    return render_template("view_patients.html", user=current_user, patients=patients)
