@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from .models import Nurse, User, Patient
+from .models import Nurse, User, Patient, Nurse_Schedule
 from . import db
 import json
 
@@ -156,3 +156,10 @@ def view_patients():
         return render_template("403.html", user=current_user)
     patients = Patient.query.all()
     return render_template("view_patients.html", user=current_user, patients=patients)
+
+@views.route('/view-nurse-schedule')
+def view_nurse_schedule():
+    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
+        return render_template("403.html", user=current_user)
+    schedules = Nurse_Schedule.query.all()
+    return render_template("view_nurse_schedule.html", user=current_user, schedules=schedules)

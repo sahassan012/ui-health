@@ -35,3 +35,11 @@ class Patient(db.Model, UserMixin):
     medical_history_description = db.Column(db.String(300))
     phone_number = db.Column(db.String(150))
     address = db.Column(db.String(200))
+
+class Nurse_Schedule(db.Model, UserMixin):
+    scheduleID = db.Column(db.Integer, primary_key=True)
+    nurseID = db.Column(db.Integer, unique=True)
+    date = db.Column(db.DateTime())
+    appointment_time = db.Column(db.DateTime())
+    status = db.Column(db.String(50))
+    nurse_comment = db.Column(db.String(250))
