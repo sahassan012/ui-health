@@ -38,8 +38,14 @@ class Patient(db.Model, UserMixin):
 
 class Nurse_Schedule(db.Model, UserMixin):
     scheduleID = db.Column(db.Integer, primary_key=True)
-    nurseID = db.Column(db.Integer, unique=True)
-    date = db.Column(db.DateTime())
-    appointment_time = db.Column(db.DateTime())
+    nurseID = db.Column(db.Integer)
+    start_time = db.Column(db.DateTime())
+    end_time = db.Column(db.DateTime())
     status = db.Column(db.String(50))
+    
+class Appointment(db.Model, UserMixin):
+    appointmentID = db.Column(db.Integer, primary_key=True)
+    nurseID = db.Column(db.Integer)
+    patientID = db.Column(db.Integer)
+    appointment_time = db.Column(db.DateTime())
     nurse_comment = db.Column(db.String(250))
