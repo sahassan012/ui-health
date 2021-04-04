@@ -1,22 +1,45 @@
 {% extends "base.html" %} {% block title %}View Nurse Schedule{% endblock %} {% block content
     %}
-    <h1 align="center">View Nurse Schedule</h1>
-    <ul class="list-group list-group-flush" id="notes">
-      <!-- {% for note in user.notes %}
-      <li class="list-group-item">
-        {{ note.data }}
-        <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </li>
-      {% endfor %}
-    </ul> -->
-    <!-- <form method="POST">
-      <textarea name="note" id="note" class="form-control"></textarea>
-      <br />
-      <div align="center">
-        <button type="submit" class="btn btn-primary">Add Note</button>
-      </div>
-    </form> -->
-    {% endblock %}
+    <style>
+      .table{
+          box-shadow: 0 0 20px 5px rgba(206, 27, 0, 0.39) !important;
+      }
+      #addNewNurseBtn{
+          box-shadow: 0 0 15px 3px rgb(19 216 41 / 35%) !important;
+      }
+  </style>
+  <h1 align="center">View Nurse Schedule</h1>
+  <div class="container">
+      <div class="row">
+          <div class="col md-12">
+              <div class="jumbotron p-3">
+
+                  <!-- Grid -->
+                  <div>
+                      <table class="table table-hover table-dark">
+                          <!-- Table headers -->
+                          <tr>
+                              <th>Schedule ID</th>
+                              <th>Nurse ID</th>
+                              <th>Start Time</th>
+                              <th>End Time</th>
+                              <th>Status</th>
+                          </tr>
+                          <!-- Records -->
+                          {% for row in nurse_schedules %}
+                          <tr>
+                              <td>{{row.scheduleID}}</td>
+                              <td>{{row.nurseID}}</td>
+                              <td>{{row.start_time}}</td>
+                              <td>{{row.end_time}}</td>
+                              <td>{{row.status}}</td>
+                          </tr>
+                      {% endfor %} 
+                  </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
     
