@@ -162,11 +162,11 @@ def view_nurse_schedule():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
         return render_template("403.html", user=current_user)
     schedules = Nurse_Schedule.query.all()
-    return render_template("view_nurse_schedule.html", user=current_user, schedules=schedules)
+    return render_template("view_nurse_schedule.html", user=current_user, nurse_schedules=schedules)
 
 @views.route('/view-my-schedule')
 def view_my_schedule():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_nurse:
         return render_template("403.html", user=current_user)
-    #schedules = Nurse_Schedule.query.all()
-    return render_template("view_my_schedule.html", user=current_user)
+    schedule = Nurse_Schedule.query.filter_by(nurseID = current_user.id).all()
+    return render_template("view_my_schedule.html", user=current_user, schedule=schedule)
