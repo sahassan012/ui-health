@@ -7,9 +7,9 @@ Requirements:
     ```Shell
     pip install -r requirements.txt
     ```
-2. Open Visual Studio and click Run->Start Debugger and then choose Flask config(use main.py).
-3. Open http://127.0.0.1:5000/ in a browser
-4. Sign up with 'admin' as email. Password will be 'password' to log in as Admin.
+2. Open Visual Studio and click Run->Start Debugger and then choose Flask config(use main.py) or "python main.py" from command line
+4. Open http://127.0.0.1:5000/ in a browser
+5. Sign up with 'admin' as email. Password at default will be 'password' to log in as Admin.
 
 # Project Description
 UI-Health allows University of Illinois hospital(UIH) to maintain nurse schedules, Covid-19 vaccination appointments, vaccine availability, and patients to sign up for appointments.
