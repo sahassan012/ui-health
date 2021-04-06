@@ -11,12 +11,6 @@ Requirements:
 3. Open http://127.0.0.1:5000/ in a browser
 4. Sign up with 'admin' as email. Password will be 'password' to log in as Admin.
 
-# Sources
-- Bootstrap 
-- Styling: https://bootsnipp.com/snippets/92gmX
-- Logo styling: https://editor.freelogodesign.org/en/logo/edit/dcfc1bd3c2e54f188a8dd839b9bf33f9?template=3693663
-- 403 page - https://codepen.io/Chesswithsean/pen/ZMwagQ
-
 # Project Description
 UI-Health allows University of Illinois hospital(UIH) to maintain nurse schedules, Covid-19 vaccination appointments, vaccine availability, and patients to sign up for appointments.
 
@@ -50,3 +44,9 @@ UI-Health allows University of Illinois hospital(UIH) to maintain nurse schedule
 - Patient: Every patient has name (Fname, MI, Lname), SSN, age, gender, race, occupation class (e.g. educator, healthcare worker, etc.), medical history description (for simplification, suppose it is plain text), phone#, address.
 - Vaccination Record: Every vaccination for a patient is done by a nurse at a specific time. The vaccination record also includes the which vaccine has been used and the dose of vaccine (e.g. PatientX received dose 1 of Pfizer, by NurseY at time-slot j). Upon Vaccination, one vaccine that has been on-hold gets reduced from the repository.
 - Nurse Schedule: Information about start and end time of a nurse's schedule
+
+# Sources
+- Bootstrap 
+- Styling: https://bootsnipp.com/snippets/92gmX
+- Logo styling: https://editor.freelogodesign.org/en/logo/edit/dcfc1bd3c2e54f188a8dd839b9bf33f9?template=3693663
+- 403 page - https://codepen.io/Chesswithsean/pen/ZMwagQ
