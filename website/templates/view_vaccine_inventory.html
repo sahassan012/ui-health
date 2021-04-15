@@ -1,0 +1,142 @@
+{% extends "base.html" %} {% block title %}Register{% endblock %} {% block content %}
+    {% block body %}
+    <style>
+        .table{
+            box-shadow: 0 0 20px 5px rgba(206, 27, 0, 0.39) !important;
+        }
+        #addNewNurseBtn{
+            box-shadow: 0 0 15px 3px rgb(19 216 41 / 35%) !important;
+        }
+    </style>
+    <h1 align="center">Vaccine Inventory</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col md-12">
+                <div class="jumbotron p-3">
+
+                    <!-- Title and button -->
+                    <div style="padding-bottom:12px">
+                        <h2>Vaccines <button id="addNewVaccineBtn" type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal">Add Vaccine</button></h2>
+                    </div>
+                    <!-- Grid -->
+                    <div>
+                        <table class="table table-hover table-dark">
+                            <!-- Table headers -->
+                            <tr>
+                                <th>Vaccine ID</th>
+                                <th>Name</th>
+                                <th>Company</th>
+                                <th>#Doses</th>
+                                <th>#On Hold</th>
+                                <th>Description</th>
+                                <th style="text-align: center;">Action</th>
+                            </tr>
+                            
+                            <!-- Records -->
+                            {% for row in vaccines %}
+                            <tr>
+                                <td>{{row.vaccineID}}</td>
+                                <td>{{row.name}}</td>
+                                <td>{{row.company_name}}</td>
+                                <td>{{row.num_doses}}</td>
+                                <td>{{row.num_on_hold}}</td>
+                                <td>{{row.description}}</td>
+                                <td style="width: 155px">
+                                    <a href="/update-vaccine/{{row.vaccineID}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.vaccineID}}">Edit</a>
+                                    <a href="{{ url_for('views.delete_vaccine', id = row.vaccineID)  }}" onclick="return confirm('Are you sure you want to delete this record?')"class="btn btn-danger btn-xs">Delete</a>
+                                </td> 
+                            </tr>
+                        <!-- Modal Edit Vaccine-->
+                        <div id="modaledit{{row.vaccineID}}" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Edit Vaccine Information</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{url_for('views.update_vaccine')}}" method="POST">
+                                            <div class="form-group">
+                                                <label>Name:</label>
+                                                <input id="name" type="text" class="form-control" name="name" value="{{row.name}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Company Name:</label>
+                                                <input type="hidden"  name="vaccineID" value="{{row.vaccineID}}">
+                                                <input id="company_name" type="text" class="form-control" name="company_name" value="{{row.company_name}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>#of Doses:</label>
+                                                <input id="num_doses" type="text" class="form-control" name="num_doses" value="{{row.num_doses}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>#on Hold:</label>
+                                                <input id="num_on_hold" type="text" class="form-control" name="num_on_hold" value="{{row.num_on_hold}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Description:</label>
+                                                <input id="description" type="text" class="form-control" name="description" value="{{row.description}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-primary" type="submit">Update</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    <!-- Modal Edit Vaccine end-->    
+                    </table>
+                </div>
+            </div>
+            <!-- Modal Add Vaccine-->
+            <div id="mymodal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add Vaccine</h4>
+                        </div>
+                        <div class="modal-body">
+                            
+                            <form action="{{url_for('views.create_vaccine')}}" method="POST">
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" name="name" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Company Name</label>
+                                    <input type="text" class="form-control" name="company_name" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>#of Doses Available</label>
+                                    <input type="text" class="form-control" name="num_doses" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>#of Doses On Hold</label>
+                                    <input type="text" class="form-control" name="num_on_hold" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Description(optional)</label>
+                                    <input type="text" class="form-control" name="description" required="1">
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-primary" type="submit">Add Vaccine</button>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">      
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- Modal Add Vaccine end-->
+        </div>
+    </div>
+</div>
+    {% endblock %}
+{% endblock %}

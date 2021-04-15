@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from .models import Nurse, User, Patient, Nurse_Schedule
+from .models import Nurse, User, Patient, Nurse_Schedule, Vaccine
 from . import db
 import json
 
@@ -170,3 +170,53 @@ def view_my_schedule():
         return render_template("403.html", user=current_user)
     schedule = Nurse_Schedule.query.filter_by(nurseID = current_user.id).all()
     return render_template("view_my_schedule.html", user=current_user, schedule=schedule)
+
+@views.route('/view-vaccine-inventory')
+def view_vaccine_inventory():
+    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
+        return render_template("403.html", user=current_user)
+    vaccines = Vaccine.query.all()
+    return render_template("view_vaccine_inventory.html", user=current_user, vaccines=vaccines)
+
+@views.route('/create-vaccine', methods = ['POST'])
+def create_vaccine():
+    if not current_user.is_admin:
+        return render_template("403.html", user=current_user)
+    if request.method == 'POST':
+        name = request.form['name']
+        company_name = request.form['company_name']
+        num_doses = request.form['num_doses']
+        description = request.form['description']
+        num_on_hold = request.form['num_on_hold']
+
+        # check if vaccine name exists
+        vaccine_name = Vaccine.query.filter_by(name=name).first() 
+        if vaccine_name:
+            flash('Vaccine name already exists', category='error')
+        else:
+            new_vaccine = Vaccine(name=name, company_name=company_name, num_doses=num_doses, description=description, num_on_hold=num_on_hold)
+            db.session.add(new_vaccine)
+            db.session.commit()
+            flash('Vaccine created!', category='success')
+        return redirect(url_for('views.view_vaccine_inventory'))
+
+@views.route('/update-vaccine', methods = ['GET', 'POST'])
+def update_vaccine():
+    if request.method == 'POST':
+        data = Vaccine.query.get(request.form.get('vaccineID'))
+        data.name = request.form['name']
+        data.company_name = request.form['company_name']
+        data.num_doses = request.form['num_doses']
+        data.description = request.form['description']
+        data.num_on_hold = request.form['num_on_hold']
+        db.session.commit()
+        flash("Vaccine updated Sucessfully!")
+        return redirect(url_for('views.view_vaccine_inventory'))
+
+@views.route('/delete-vaccine/<id>/', methods = ['GET', 'POST'])
+def delete_vaccine(id):
+    data = Vaccine.query.get(id)
+    db.session.delete(data)
+    db.session.commit()
+    flash("Vaccine Deleted Successfully")
+    return redirect(url_for('views.view_vaccine_inventory'))

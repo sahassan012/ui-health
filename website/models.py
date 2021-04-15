@@ -49,3 +49,11 @@ class Appointment(db.Model, UserMixin):
     patientID = db.Column(db.Integer)
     appointment_time = db.Column(db.DateTime())
     nurse_comment = db.Column(db.String(250))
+
+class Vaccine(db.Model, UserMixin):
+    vaccineID = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(150))
+    company_name = db.Column(db.String(150))
+    num_doses = db.Column(db.Integer)
+    description = db.Column(db.String(250))
+    num_on_hold = db.Column(db.Integer)
