@@ -16,20 +16,20 @@ DB_NAME = "database.db"
 def home():
     # If admin, show admin page
     if (current_user.is_admin):
-        return render_template("admin.html", user=current_user)
+        return render_template("/admin/admin.html", user=current_user)
     return render_template("home.html", user=current_user)
 
 @views.route('/register-nurse')
 def register_nurse():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
-        return render_template("403.html", user=current_user)
+        return render_template("/errors/403.html", user=current_user)
     nurses = Nurse.query.all()
-    return render_template("register_nurse.html", user=current_user, nurses = nurses)
+    return render_template("/admin/register_nurse.html", user=current_user, nurses = nurses)
 
 @views.route('/create-nurse', methods = ['POST'])
 def create_nurse():
     if not current_user.is_admin:
-        return render_template("403.html", user=current_user)
+        return render_template("/errors/403.html", user=current_user)
     if request.method == 'POST':
         email = request.form['email']
         username = request.form['username']
@@ -123,7 +123,7 @@ def my_account():
         nurse = Nurse.query.filter_by(employeeID = current_user.id).first()
         return render_template("my_account.html", user_nurse=nurse, user=current_user)
     else:
-        return render_template("403.html", user=current_user)
+        return render_template("/errors/403.html", user=current_user)
 
 @views.route('/update-account-info', methods = ['GET', 'POST'])
 def update_account_info():
@@ -153,35 +153,35 @@ def update_account_info():
 @views.route('/view-patients')
 def view_patients():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
-        return render_template("403.html", user=current_user)
+        return render_template("/errors/403.html", user=current_user)
     patients = Patient.query.all()
-    return render_template("view_patients.html", user=current_user, patients=patients)
+    return render_template("/admin/view_patients.html", user=current_user, patients=patients)
 
 @views.route('/view-nurse-schedule')
 def view_nurse_schedule():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
-        return render_template("403.html", user=current_user)
+        return render_template("/errors/403.html", user=current_user)
     schedules = Nurse_Schedule.query.all()
-    return render_template("view_nurse_schedule.html", user=current_user, nurse_schedules=schedules)
+    return render_template("/admin/view_nurse_schedule.html", user=current_user, nurse_schedules=schedules)
 
 @views.route('/view-my-schedule')
 def view_my_schedule():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_nurse:
-        return render_template("403.html", user=current_user)
+        return render_template("/errors/403.html", user=current_user)
     schedule = Nurse_Schedule.query.filter_by(nurseID = current_user.id).all()
-    return render_template("view_my_schedule.html", user=current_user, schedule=schedule)
+    return render_template("/nurse/view_my_schedule.html", user=current_user, schedule=schedule)
 
 @views.route('/view-vaccine-inventory')
 def view_vaccine_inventory():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
-        return render_template("403.html", user=current_user)
+        return render_template("/errors/403.html", user=current_user)
     vaccines = Vaccine.query.all()
-    return render_template("view_vaccine_inventory.html", user=current_user, vaccines=vaccines)
+    return render_template("/admin/view_vaccine_inventory.html", user=current_user, vaccines=vaccines)
 
 @views.route('/create-vaccine', methods = ['POST'])
 def create_vaccine():
     if not current_user.is_admin:
-        return render_template("403.html", user=current_user)
+        return render_template("/errors/403.html", user=current_user)
     if request.method == 'POST':
         name = request.form['name']
         company_name = request.form['company_name']
@@ -212,6 +212,7 @@ def update_vaccine():
         db.session.commit()
         flash("Vaccine updated Sucessfully!")
         return redirect(url_for('views.view_vaccine_inventory'))
+    
 
 @views.route('/delete-vaccine/<id>/', methods = ['GET', 'POST'])
 def delete_vaccine(id):

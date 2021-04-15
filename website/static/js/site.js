@@ -32,13 +32,17 @@
     lock.style.top = position[0];
     lock.style.left = position[1];
     lock.classList = 'lock'// generated';
-    document.body.appendChild(lock);
+    if (document.body != null){
+        document.body.appendChild(lock);
+    }
     setTimeout(()=>{
         lock.style.opacity = '1';
         lock.classList.add('generated');
     }, 100);
     setTimeout(()=>{
-        lock.parentElement.removeChild(lock);
+        if (lock.parentElement != null){
+            lock.parentElement.removeChild(lock);
+        }
     }, 2000);
     }
     function generatePosition() {
