@@ -16,7 +16,7 @@
                 <div class="jumbotron p-3">
                     <!-- Title and button -->
                     <div style="padding-bottom:12px">
-                        <h2>Manage <b>Schedule</b> <button id="addNewNurseBtn" type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal">Add New Nurse</button></h2>
+                        <h2>Manage <b>Schedule</b> <button id="addNewSchedule" type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal">Add New Schedule</button></h2>
                     </div>
                     <!-- Grid -->
                     <div>
@@ -36,37 +36,44 @@
                               <td>{{row.scheduleID}}</td>
                               <td>{{row.start_time}}</td>
                               <td>{{row.end_time}}</td>
-                              <td>{{row.status}}</td>>
-                                <td style="width: 155px">
-                                    <a href="/update-nurse/{{row.employeeID}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.employeeID}}">Edit</a>
-                                    <a href="{{ url_for('views.delete_nurse', id = row.employeeID)  }}" onclick="return confirm('Are you sure you want to delete this record?')"class="btn btn-danger btn-xs">Delete</a>
-                                </td>
+                              <td>{{row.status}}</td>
+                              <td style="width: 155px">
+                                 <a href="/update-nurse-schedule/{{row.scheduleID}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.scheduleID}}">Edit</a>
+                                 <a href="{{ url_for('views.delete_nurse_schedule', id = row.scheduleID)  }}" onclick="return confirm('Are you sure you want to delete this record?')"class="btn btn-danger btn-xs">Delete</a>
+                              </td>
                             </tr>
-
                             
                         <!-- Modal Edit Nurse-->
-                        <div id="modaledit{{row.employeeID}}" class="modal fade" role="dialog">
+                        <div id="modaledit{{row.scheduleID}}" class="modal fade" role="dialog">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="modal-title">Edit Nurse Information</h4>
+                                        <h4 class="modal-title">Edit Schedule</h4>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="{{url_for('views.update_nurse')}}" method="POST">
+                                        <form action="{{url_for('views.update_nurse_schedule')}}" method="POST">
                                             <div class="form-group">
-                                                <label>Start Time:</label>
-                                                <input id="email" type="text" class="form-control" name="email" value="{{row.email}}">
+                                                <div class="input-group date form_datetime col-md-10" data-date-format="yyyy-mm-dd HH:ii p" data-link-field="dtp_input1">
+                                                    <input id="start_time" class="form-control" size="16" type="datetime" name="start_time" value="{{row.start_time}}" readonly>
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove" style="margin-top: 7px;">Start Time</span></span>
+                                                </div>
+                                                <input type="hidden"  name="scheduleID" value="{{row.scheduleID}}"><br/>
                                             </div>
                                             <div class="form-group">
-                                                <label>End Time:</label>
-                                                <input type="hidden"  name="employeeID" value="{{row.employeeID}}">
-                                                <input id="username" type="text" class="form-control" name="username" value="{{row.username}}">
+                                                <div class="input-group date form_datetime col-md-10" data-date-format="yyyy-mm-dd HH:ii p" data-link-field="dtp_input1">
+                                                    <input id="end_time" class="form-control" size="16" type="datetime" name="end_time" value="{{row.end_time}}" readonly>
+                                                    <span class="input-group-addon"><span class="glyphicon glyphicon-remove" style="margin-top: 7px;">End Time</span></span>
+                                                </div>
+                                                <input type="hidden" id="dtp_input1" value="" /><br/>
                                             </div>
-                                            <div class="form-group">
-                                                <label>Status:</label>
-                                                <input id="gender" type="text" class="form-control" name="gender" value="{{row.gender}}">
+                                            
+                                            <div class="form-group" style="margin-bottom: -59px; margin-left: 15px;">
+                                                <button class="btn btn-primary" type="submit">Save</button>
                                             </div>
                                         </form>
+                                        <div class="modal-footer">      
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -87,17 +94,17 @@
                             <h4 class="modal-title">Add Schedule</h4>
                         </div>
                         <div class="modal-body">
-                            <form action="{{url_for('views.create_nurse')}}" method="POST">
+                            <form action="{{url_for('views.create_nurse_schedule')}}" method="POST">
                                 <div class="form-group">
-                                    <div class="input-group date form_datetime col-md-10" data-date="2021-04-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
-                                        <input class="form-control" size="16" type="text" value="" readonly>
+                                    <div class="input-group date form_datetime col-md-10" data-date-format="yyyy-mm-dd HH:ii:ss p" data-link-field="dtp_input1">
+                                        <input id="start_time" class="form-control" size="16" type="datetime" name="start_time" value="Start Time" readonly>
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove" style="margin-top: 7px;">Start Time</span></span>
                                     </div>
                                     <input type="hidden" id="dtp_input1" value="" /><br/>
                                 </div>
                                 <div class="form-group">
-                                    <div class="input-group date form_datetime col-md-10" data-date="2021-04-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
-                                        <input class="form-control" size="16" type="text" value="" readonly>
+                                    <div class="input-group date form_datetime col-md-10" data-date-format="yyyy-mm-dd HH:ii:ss p" data-link-field="dtp_input1">
+                                        <input id="end_time" class="form-control" size="16" type="datetime" name="end_time" value="End Time" readonly>
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-remove" style="margin-top: 7px;">End Time</span></span>
                                     </div>
                                     <input type="hidden" id="dtp_input1" value="" /><br/>
@@ -111,7 +118,6 @@
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

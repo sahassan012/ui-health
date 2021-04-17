@@ -53,13 +53,13 @@
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           <a class="nav-item nav-link" id="register_nurse" href="/register-nurse">Register Nurse</a>
           <a class="nav-item nav-link" id="view_patient" href="/view-patients">View Patients</a>
-          <a class="nav-item nav-link" id="view_nurse_schedule" href="/view-nurse-schedule">Nurse Schedule</a>
+          <a class="nav-item nav-link" id="view_all_nurse_schedules" href="/view-all-nurse-schedules">Nurse Schedule</a>
           <a class="nav-item nav-link" id="view_vaccine_inventory" href="/view-vaccine-inventory">Inventory</a>
           {% elif user.is_patient %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
           {% elif user.is_nurse %}
           <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="view_my_schedule" href="/view-my-schedule">My Schedule</a>
+          <a class="nav-item nav-link" id="view_nurse_schedule" href="/view-nurse-schedule">My Schedule</a>
           {% else %}
           <a class="nav-item nav-link" id="login" href="/login">Back to Login</a>
           {% endif %}

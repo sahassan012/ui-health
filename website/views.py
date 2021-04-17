@@ -3,13 +3,13 @@ from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from .models import Nurse, User, Patient, Nurse_Schedule, Vaccine
+from datetime import datetime
 from . import db
 import json
 
 views = Blueprint('views', __name__)
 
 DB_NAME = "database.db"
-
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -157,19 +157,13 @@ def view_patients():
     patients = Patient.query.all()
     return render_template("/admin/view_patients.html", user=current_user, patients=patients)
 
-@views.route('/view-nurse-schedule')
-def view_nurse_schedule():
+@views.route('/view-all-nurse-schedules')
+def view_all_nurse_schedules():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
         return render_template("/errors/403.html", user=current_user)
     schedules = Nurse_Schedule.query.all()
-    return render_template("/admin/view_nurse_schedule.html", user=current_user, nurse_schedules=schedules)
+    return render_template("/admin/view_all_nurse_schedules.html", user=current_user, nurse_schedules=schedules)
 
-@views.route('/view-my-schedule')
-def view_my_schedule():
-    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_nurse:
-        return render_template("/errors/403.html", user=current_user)
-    schedule = Nurse_Schedule.query.filter_by(nurseID = current_user.id).all()
-    return render_template("/nurse/view_my_schedule.html", user=current_user, schedule=schedule)
 
 @views.route('/view-vaccine-inventory')
 def view_vaccine_inventory():
@@ -188,8 +182,6 @@ def create_vaccine():
         num_doses = request.form['num_doses']
         description = request.form['description']
         num_on_hold = request.form['num_on_hold']
-
-        # check if vaccine name exists
         vaccine_name = Vaccine.query.filter_by(name=name).first() 
         if vaccine_name:
             flash('Vaccine name already exists', category='error')
@@ -221,3 +213,71 @@ def delete_vaccine(id):
     db.session.commit()
     flash("Vaccine Deleted Successfully")
     return redirect(url_for('views.view_vaccine_inventory'))
+
+@views.route('/view-nurse-schedule')
+def view_nurse_schedule():
+    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_nurse:
+        return render_template("/errors/403.html", user=current_user)
+    schedule = Nurse_Schedule.query.filter_by(nurseID = current_user.id).all()
+    return render_template("/nurse/view_nurse_schedule.html", user=current_user, schedule=schedule)
+
+@views.route('/create-nurse-schedule', methods = ['POST'])
+def create_nurse_schedule():
+    if not current_user.is_nurse:
+        return render_template("/errors/403.html", user=current_user)
+    if request.method == 'POST':
+        start_time_str = request.form['start_time']
+        end_time_str = request.form['end_time']
+
+        if (end_time_str == 'End Time' or start_time_str == 'Start Time'):
+            flash("Please enter start and end time.", category='error')
+            return redirect(url_for('views.view_nurse_schedule'))
+
+        start_time = datetime.strptime(start_time_str, "%Y-%m-%d %I:%M:%S %p")
+        end_time = datetime.strptime(end_time_str, "%Y-%m-%d %I:%M:%S %p")
+
+        # Add logic for nurses here
+        if (end_time <= start_time):
+            flash("Schedule wasn't updated. Please make sure start time is after end time.", category='error')
+            return redirect(url_for('views.view_nurse_schedule'))
+
+        new_schedule = Nurse_Schedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
+        db.session.add(new_schedule)
+        db.session.commit()
+        flash('Schedule created!', category='success')
+    return redirect(url_for('views.view_nurse_schedule'))
+
+@views.route('/update-nurse-schedule', methods = ['GET', 'POST'])
+def update_nurse_schedule():
+    if request.method == 'POST':
+        data = Nurse_Schedule.query.get(request.form.get('scheduleID'))
+        start_time_str = request.form['start_time']
+        end_time_str = request.form['end_time']
+        
+        if (start_time_str[-1] == 'm'):
+            start_time = datetime.strptime(start_time_str, "%Y-%m-%d %I:%M %p")
+        else:
+            start_time = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S")
+
+        if (end_time_str[-1] == 'm'):
+            end_time = datetime.strptime(end_time_str, "%Y-%m-%d %I:%M %p")
+        else:
+            end_time = datetime.strptime(end_time_str, "%Y-%m-%d %H:%M:%S")
+
+        # Add logic for nurses here
+        if (end_time <= start_time):
+            flash("Schedule wasn't updated. Please make sure start time is after end time.", category='error')
+            return redirect(url_for('views.view_nurse_schedule'))
+        data.start_time = start_time
+        data.end_time = end_time
+        db.session.commit()
+        flash("Schedule updated Sucessfully!")
+    return redirect(url_for('views.view_nurse_schedule'))
+
+@views.route('/delete-nurse-schedule/<id>/', methods = ['GET', 'POST'])
+def delete_nurse_schedule(id):
+    schedule = Nurse_Schedule.query.get(id)
+    db.session.delete(schedule)
+    db.session.commit()
+    flash("Schedule Deleted Successfully")
+    return redirect(url_for('views.view_nurse_schedule'))
