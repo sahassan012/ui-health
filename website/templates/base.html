@@ -129,15 +129,18 @@
     <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../static/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
     <script type="text/javascript">
-      $('.form_datetime').datetimepicker({
-          weekStart: 1,
-          todayBtn:  1,
-          autoclose: 1,
-          todayHighlight: 1,
-          startView: 2,
-          forceParse: 0,
-          showMeridian: 1
-      });
+    $('.form_datetime').datetimepicker({
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
+    });
+    $('.form_datetime').datetimepicker({
+        startDate: Date.now()
+    });
   </script>
   </body>
 </html>

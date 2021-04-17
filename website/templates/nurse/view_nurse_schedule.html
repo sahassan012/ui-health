@@ -128,6 +128,7 @@
     {% endblock %}
 {% endblock %}
 
+
 <script type="text/javascript">
     $('.form_datetime').datetimepicker({
         //language:  'fr',
@@ -138,5 +139,8 @@
 		startView: 2,
 		forceParse: 0,
         showMeridian: 1
+    });
+    $('.datetimepicker').datetimepicker({
+        startDate: Date.now()
     });
 </script>
