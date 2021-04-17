@@ -1116,18 +1116,11 @@
                 if (this.viewSelect >= 1) {
                   this._setDate(UTCDate(year, month, day, hours, minutes, seconds, 0));
                 }
-              } else if (target.is('.minute')) {
-                minutes = parseInt(target.text().substr(target.text().indexOf(':') + 1), 10) || 0;
-                this.viewDate.setUTCMinutes(minutes);
-                this.element.trigger({
-                  type: 'changeMinute',
-                  date: this.viewDate
-                });
-                if (this.viewSelect >= 0) {
-                  this._setDate(UTCDate(year, month, day, hours, minutes, seconds, 0));
-                }
+              } 
+              if (this.viewSelect >= 0) {
+                this._setDate(UTCDate(year, month, day, hours, 0, 0, 0));
               }
-              if (this.viewMode !== 0) {
+              if (this.viewMode > 1) {
                 var oldViewMode = this.viewMode;
                 this.showMode(-1);
                 this.fill();

@@ -237,6 +237,10 @@ def create_nurse_schedule():
         end_time = datetime.strptime(end_time_str, "%Y-%m-%d %I:%M:%S %p")
 
         # Add logic for nurses here
+            # Check for if a conflicting schedule exists
+                # Check if the same schedule exists
+                # Check if start time is after an existing start time
+                # Check if end time is after an existing start time
         if (end_time <= start_time):
             flash("Schedule wasn't updated. Please make sure start time is after end time.", category='error')
             return redirect(url_for('views.view_nurse_schedule'))
@@ -265,6 +269,10 @@ def update_nurse_schedule():
             end_time = datetime.strptime(end_time_str, "%Y-%m-%d %H:%M:%S")
 
         # Add logic for nurses here
+            # Check for if a conflicting schedule exists
+                # Check if the same schedule exists
+                # Check if start time is after an existing start time
+                # Check if end time is after an existing start time
         if (end_time <= start_time):
             flash("Schedule wasn't updated. Please make sure start time is after end time.", category='error')
             return redirect(url_for('views.view_nurse_schedule'))
