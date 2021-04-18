@@ -55,12 +55,16 @@ def add_schedule_count(start_time, end_time):
         start_datehour = start_time.strftime("%Y-%m-%d %H:00")
         time_slot = Nurse_Schedule_Manager.query.filter_by(timestamp = start_datehour).first()
         if time_slot:
+            if time_slot.count == 12:
+                flash("The schedule you entered has atleast one timeslot with 12 nurses scheduled. Please choose a different start and end time.", category='error')
+                return 0
             time_slot.count += 1
         else:
             new_time_slot = Nurse_Schedule_Manager(timestamp=start_datehour, count=1)
             db.session.add(new_time_slot)
         db.session.commit()
         start_time += timedelta(hours=1)
+    return 1
 
 def remove_schedule_count(start_time, end_time):
     while(start_time <= end_time):

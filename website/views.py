@@ -233,12 +233,12 @@ def create_nurse_schedule():
         start_time = str_to_datetime(start_time_str)
         end_time = str_to_datetime(end_time_str)
         nurse_schedule_lst = Nurse_Schedule.query.filter_by(nurseID = current_user.id)
-        if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time) == 1:
-            new_schedule = Nurse_Schedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
-            add_schedule_count(start_time, end_time)
-            db.session.add(new_schedule)
-            db.session.commit()
-            flash('Schedule created Sucessfully!', category='success')
+        if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time):
+            if add_schedule_count(start_time, end_time):
+                new_schedule = Nurse_Schedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
+                db.session.add(new_schedule)
+                db.session.commit()
+                flash('Schedule created Sucessfully!', category='success')
     return redirect(url_for('views.view_nurse_schedule'))
 
 @views.route('/update-nurse-schedule', methods = ['GET', 'POST'])
@@ -250,7 +250,7 @@ def update_nurse_schedule():
         start_time = str_to_datetime_v2(start_time_str)
         end_time = str_to_datetime_v2(end_time_str)
         nurse_schedule_lst = Nurse_Schedule.query.filter_by(nurseID = current_user.id)
-        if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time, data.scheduleID, True) == 1:
+        if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time, data.scheduleID, True):
             data.start_time = start_time
             data.end_time = end_time
             db.session.commit()
