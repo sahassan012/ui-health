@@ -2,20 +2,18 @@ from flask import Blueprint, render_template, request, flash, jsonify, redirect,
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from .models import Nurse, User, Patient, Nurse_Schedule, Vaccine
+from .models import Nurse, User, Patient, Nurse_Schedule, Nurse_Schedule_Manager, Vaccine
 from datetime import datetime
 from . import db
 from .services import *
 import json
 
 views = Blueprint('views', __name__)
-
 DB_NAME = "database.db"
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
 def home():
-    # If admin, show admin page
     if (current_user.is_admin):
         return render_template("/admin/admin.html", user=current_user)
     return render_template("home.html", user=current_user)
@@ -237,6 +235,7 @@ def create_nurse_schedule():
         nurse_schedule_lst = Nurse_Schedule.query.filter_by(nurseID = current_user.id)
         if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time) == 1:
             new_schedule = Nurse_Schedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
+            add_schedule_count(start_time, end_time)
             db.session.add(new_schedule)
             db.session.commit()
             flash('Schedule created Sucessfully!', category='success')
@@ -261,6 +260,7 @@ def update_nurse_schedule():
 @views.route('/delete-nurse-schedule/<id>/', methods = ['GET', 'POST'])
 def delete_nurse_schedule(id):
     schedule = Nurse_Schedule.query.get(id)
+    remove_schedule_count(schedule.start_time, schedule.end_time)
     db.session.delete(schedule)
     db.session.commit()
     flash("Schedule Deleted Successfully")
