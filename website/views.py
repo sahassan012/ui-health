@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from .models import Nurse, User, Patient, Nurse_Schedule, Vaccine
 from datetime import datetime
 from . import db
+from .services import *
 import json
 
 views = Blueprint('views', __name__)
@@ -228,27 +229,17 @@ def create_nurse_schedule():
     if request.method == 'POST':
         start_time_str = request.form['start_time']
         end_time_str = request.form['end_time']
-
         if (end_time_str == 'End Time' or start_time_str == 'Start Time'):
             flash("Please enter start and end time.", category='error')
             return redirect(url_for('views.view_nurse_schedule'))
-
         start_time = datetime.strptime(start_time_str, "%Y-%m-%d %I:%M:%S %p")
         end_time = datetime.strptime(end_time_str, "%Y-%m-%d %I:%M:%S %p")
-
-        # Add logic for nurses here
-            # Check for if a conflicting schedule exists
-                # Check if the same schedule exists
-                # Check if start time is after an existing start time
-                # Check if end time is after an existing start time
-        if (end_time <= start_time):
-            flash("Schedule wasn't updated. Please make sure start time is after end time.", category='error')
-            return redirect(url_for('views.view_nurse_schedule'))
-
-        new_schedule = Nurse_Schedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
-        db.session.add(new_schedule)
-        db.session.commit()
-        flash('Schedule created!', category='success')
+        nurse_schedule_lst = Nurse_Schedule.query.filter_by(nurseID = current_user.id)
+        if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time) == 1:
+            new_schedule = Nurse_Schedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
+            db.session.add(new_schedule)
+            db.session.commit()
+            flash('Schedule created Sucessfully!', category='success')
     return redirect(url_for('views.view_nurse_schedule'))
 
 @views.route('/update-nurse-schedule', methods = ['GET', 'POST'])
@@ -257,29 +248,20 @@ def update_nurse_schedule():
         data = Nurse_Schedule.query.get(request.form.get('scheduleID'))
         start_time_str = request.form['start_time']
         end_time_str = request.form['end_time']
-        
         if (start_time_str[-1] == 'm'):
             start_time = datetime.strptime(start_time_str, "%Y-%m-%d %I:%M %p")
         else:
             start_time = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S")
-
         if (end_time_str[-1] == 'm'):
             end_time = datetime.strptime(end_time_str, "%Y-%m-%d %I:%M %p")
         else:
             end_time = datetime.strptime(end_time_str, "%Y-%m-%d %H:%M:%S")
-
-        # Add logic for nurses here
-            # Check for if a conflicting schedule exists
-                # Check if the same schedule exists
-                # Check if start time is after an existing start time
-                # Check if end time is after an existing start time
-        if (end_time <= start_time):
-            flash("Schedule wasn't updated. Please make sure start time is after end time.", category='error')
-            return redirect(url_for('views.view_nurse_schedule'))
-        data.start_time = start_time
-        data.end_time = end_time
-        db.session.commit()
-        flash("Schedule updated Sucessfully!")
+        nurse_schedule_lst = Nurse_Schedule.query.filter_by(nurseID = current_user.id)
+        if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time) == 1:
+            data.start_time = start_time
+            data.end_time = end_time
+            db.session.commit()
+            flash("Schedule updated Sucessfully!")
     return redirect(url_for('views.view_nurse_schedule'))
 
 @views.route('/delete-nurse-schedule/<id>/', methods = ['GET', 'POST'])
