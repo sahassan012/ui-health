@@ -42,7 +42,11 @@ class Nurse_Schedule(db.Model, UserMixin):
     start_time = db.Column(db.DateTime())
     end_time = db.Column(db.DateTime())
     status = db.Column(db.String(50))
-    
+
+class Nurse_Schedule_Manager(db.Model):
+    timestamp = db.Column(db.String(35), primary_key=True)
+    count = db.Column(db.Integer)
+
 class Appointment(db.Model, UserMixin):
     appointmentID = db.Column(db.Integer, primary_key=True)
     nurseID = db.Column(db.Integer)
