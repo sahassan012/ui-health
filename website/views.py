@@ -232,8 +232,8 @@ def create_nurse_schedule():
         if (end_time_str == 'End Time' or start_time_str == 'Start Time'):
             flash("Please enter start and end time.", category='error')
             return redirect(url_for('views.view_nurse_schedule'))
-        start_time = datetime.strptime(start_time_str, "%Y-%m-%d %I:%M:%S %p")
-        end_time = datetime.strptime(end_time_str, "%Y-%m-%d %I:%M:%S %p")
+        start_time = str_to_datetime(start_time_str)
+        end_time = str_to_datetime(end_time_str)
         nurse_schedule_lst = Nurse_Schedule.query.filter_by(nurseID = current_user.id)
         if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time) == 1:
             new_schedule = Nurse_Schedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
@@ -248,16 +248,10 @@ def update_nurse_schedule():
         data = Nurse_Schedule.query.get(request.form.get('scheduleID'))
         start_time_str = request.form['start_time']
         end_time_str = request.form['end_time']
-        if (start_time_str[-1] == 'm'):
-            start_time = datetime.strptime(start_time_str, "%Y-%m-%d %I:%M %p")
-        else:
-            start_time = datetime.strptime(start_time_str, "%Y-%m-%d %H:%M:%S")
-        if (end_time_str[-1] == 'm'):
-            end_time = datetime.strptime(end_time_str, "%Y-%m-%d %I:%M %p")
-        else:
-            end_time = datetime.strptime(end_time_str, "%Y-%m-%d %H:%M:%S")
+        start_time = str_to_datetime_v2(start_time_str)
+        end_time = str_to_datetime_v2(end_time_str)
         nurse_schedule_lst = Nurse_Schedule.query.filter_by(nurseID = current_user.id)
-        if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time) == 1:
+        if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time, data.scheduleID, True) == 1:
             data.start_time = start_time
             data.end_time = end_time
             db.session.commit()
