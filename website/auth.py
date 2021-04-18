@@ -8,6 +8,7 @@ from flask_login import login_user, login_required, logout_user, current_user
 
 auth = Blueprint('auth', __name__)
 
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -96,7 +97,7 @@ def sign_up():
         medical_history_description = request.form.get('medicalHistoryDescription')
         phone_number = request.form.get('phoneNumber')
         address = request.form.get('address')
-        
+
         user_email_check = User.query.filter_by(email=email).first()
         user_SSN_check = Patient.query.filter_by(SSN=SSN).first()
         if user_email_check:
@@ -104,7 +105,8 @@ def sign_up():
         elif user_SSN_check:
             flash('SSN already exists.', category='error')
         elif email == 'admin':
-            new_user = User(email=email, first_name='Admin', password=generate_password_hash('password', method='sha256'), is_admin=True)
+            new_user = User(email=email, first_name='Admin',
+                            password=generate_password_hash('password', method='sha256'), is_admin=True)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
@@ -120,7 +122,8 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         else:
             new_user = create_user(email, first_name, password1, False, True, False)
-            create_patient(new_user.id, username, first_name, mi_name, last_name, SSN, age, gender, race, occupation_class, medical_history_description, phone_number, address)
+            create_patient(new_user.id, username, first_name, mi_name, last_name, SSN, age, gender, race,
+                           occupation_class, medical_history_description, phone_number, address)
             login_user(new_user, remember=True)
             return redirect(url_for('views.home'))
     return render_template("sign_up.html", user=current_user)

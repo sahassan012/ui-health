@@ -2,6 +2,7 @@ from . import db
 from flask_login import UserMixin
 from sqlalchemy.sql import func
 
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
@@ -10,6 +11,7 @@ class User(db.Model, UserMixin):
     is_admin = db.Column(db.Boolean, default=False)
     is_patient = db.Column(db.Boolean, default=False)
     is_nurse = db.Column(db.Boolean, default=False)
+
 
 class Nurse(db.Model, UserMixin):
     employeeID = db.Column(db.Integer, primary_key=True)
@@ -20,6 +22,7 @@ class Nurse(db.Model, UserMixin):
     age = db.Column(db.Integer)
     phoneNumber = db.Column(db.String(150))
     address = db.Column(db.String(200))
+
 
 class Patient(db.Model, UserMixin):
     patientID = db.Column(db.Integer, primary_key=True)
@@ -36,6 +39,7 @@ class Patient(db.Model, UserMixin):
     phone_number = db.Column(db.String(150))
     address = db.Column(db.String(200))
 
+
 class Nurse_Schedule(db.Model, UserMixin):
     scheduleID = db.Column(db.Integer, primary_key=True)
     nurseID = db.Column(db.Integer)
@@ -43,9 +47,11 @@ class Nurse_Schedule(db.Model, UserMixin):
     end_time = db.Column(db.DateTime())
     status = db.Column(db.String(50))
 
+
 class Nurse_Schedule_Manager(db.Model):
     timestamp = db.Column(db.String(35), primary_key=True)
     count = db.Column(db.Integer)
+
 
 class Appointment(db.Model, UserMixin):
     appointmentID = db.Column(db.Integer, primary_key=True)
@@ -53,6 +59,7 @@ class Appointment(db.Model, UserMixin):
     patientID = db.Column(db.Integer)
     appointment_time = db.Column(db.DateTime())
     nurse_comment = db.Column(db.String(250))
+
 
 class Vaccine(db.Model, UserMixin):
     vaccineID = db.Column(db.Integer, primary_key=True)
