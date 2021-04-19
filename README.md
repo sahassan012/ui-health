@@ -45,9 +45,9 @@ UI-Health allows University of Illinois hospital(UIH) to maintain nurse schedule
 - Vaccination Record: Every vaccination for a patient is done by a nurse at a specific time. The vaccination record also includes the which vaccine has been used and the dose of vaccine (e.g. PatientX received dose 1 of Pfizer, by NurseY at time-slot j). Upon Vaccination, one vaccine that has been on-hold gets reduced from the repository.
 - Nurse Schedule: Information about start and end time of a nurse's schedule
 
-# Sources
-- Bootstrap 
-- Styling: https://bootsnipp.com/snippets/92gmX
+# Sources/Styling
+- Bootstrap: https://getbootstrap.com/docs/5.0/getting-started/introduction/
+- Login page: https://bootsnipp.com/snippets/92gmX
 - Logo styling: https://editor.freelogodesign.org/en/logo/edit/dcfc1bd3c2e54f188a8dd839b9bf33f9?template=3693663
-- 403 page - https://codepen.io/Chesswithsean/pen/ZMwagQ
+- 403 error page - https://codepen.io/Chesswithsean/pen/ZMwagQ
 - Nurses Schedules Page - https://codepen.io/oltika/pen/GNvdgV
