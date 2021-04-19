@@ -11,9 +11,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
 def start_app():
+    default = os.getcwd()
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    print(os.getcwd())
     os.system("flake8")
+    os.chdir(default)
     app.config['SECRET_KEY'] = 'CS480-Project'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DB_NAME
     db.init_app(app)
