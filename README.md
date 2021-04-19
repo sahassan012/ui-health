@@ -50,3 +50,4 @@ UI-Health allows University of Illinois hospital(UIH) to maintain nurse schedule
 - Styling: https://bootsnipp.com/snippets/92gmX
 - Logo styling: https://editor.freelogodesign.org/en/logo/edit/dcfc1bd3c2e54f188a8dd839b9bf33f9?template=3693663
 - 403 page - https://codepen.io/Chesswithsean/pen/ZMwagQ
+- Nurses Schedules Page - https://codepen.io/oltika/pen/GNvdgV

@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash
-from .models import Nurse, User, Patient, Vaccine
-from .services import *
+from .models import Nurse, User, Patient, NurseSchedule, Vaccine, NurseScheduleTracker
+from .services import check_schedules_for_conflict, remove_schedule_count, \
+    str_to_datetime, str_to_datetime_v2, add_schedule_count, convert_timeslots_to_dictionary
+from . import db
 
 views = Blueprint('views', __name__)
 DB_NAME = "database.db"
@@ -46,7 +48,7 @@ def create_nurse():
             flash('Email given already exists.', category='error')
         else:
             user = create_user(email, name, password, is_admin=False, is_patient=False, is_nurse=True)
-            if user == None:
+            if user is None:
                 flash('Something went wrong!', category='error')
             else:
                 new_nurse = Nurse(employeeID=user.id, email=email, username=username, gender=gender, name=name, age=age,
@@ -173,7 +175,8 @@ def view_all_nurse_schedules():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
         return render_template("/errors/403.html", user=current_user)
     schedules = NurseSchedule.query.all()
-    return render_template("/admin/view_all_nurse_schedules.html", user=current_user, nurse_schedules=schedules)
+    timeslots = convert_timeslots_to_dictionary(NurseScheduleTracker.query.all())
+    return render_template("/admin/view_all_nurse_schedules.html", user=current_user, nurse_schedules=schedules, timeslots=timeslots)
 
 
 @views.route('/view-vaccine-inventory')

@@ -98,3 +98,21 @@ def remove_inactive_schedules():
             print("Deleted schedule time-slot" + schedule.timestamp)
             db.session.delete(schedule)
     db.session.commit()
+
+
+def convert_timeslots_to_dictionary(timeslots):
+    timeslot_dictionary = {}
+    for timeslot in timeslots:
+        timeslot_start_str = datetime.strptime(timeslot.timestamp, "%Y-%m-%d %H:00")
+        timeslot_end_str = datetime.strptime(timeslot.timestamp, "%Y-%m-%d %H:00")
+        timeslot_end_str += timedelta(hours=1)
+        timeslot_day_str = timeslot_start_str.strftime("%Y-%m-%d")
+        timeslot_start_hour_str = timeslot_start_str.strftime("%H:00")
+        timeslot_end_hour_str = timeslot_end_str.strftime("%H:00")
+        new_slot = {timeslot_start_hour_str: [timeslot_end_hour_str, timeslot.count]}
+        if timeslot_day_str in timeslot_dictionary:
+            timeslot_dictionary[timeslot_day_str].update(new_slot)
+        else:
+            timeslot_dictionary[timeslot_day_str] = new_slot
+    timeslot_dictionary = dict(sorted(timeslot_dictionary.items()))
+    return timeslot_dictionary
