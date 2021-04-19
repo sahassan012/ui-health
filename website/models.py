@@ -1,6 +1,5 @@
 from . import db
 from flask_login import UserMixin
-from sqlalchemy.sql import func
 
 
 class User(db.Model, UserMixin):
@@ -40,7 +39,7 @@ class Patient(db.Model, UserMixin):
     address = db.Column(db.String(200))
 
 
-class Nurse_Schedule(db.Model, UserMixin):
+class NurseSchedule(db.Model, UserMixin):
     scheduleID = db.Column(db.Integer, primary_key=True)
     nurseID = db.Column(db.Integer)
     start_time = db.Column(db.DateTime())
@@ -48,7 +47,7 @@ class Nurse_Schedule(db.Model, UserMixin):
     status = db.Column(db.String(50))
 
 
-class Nurse_Schedule_Manager(db.Model):
+class NurseScheduleTracker(db.Model):
     timestamp = db.Column(db.String(35), primary_key=True)
     count = db.Column(db.Integer)
 

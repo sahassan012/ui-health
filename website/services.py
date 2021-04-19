@@ -1,8 +1,7 @@
-from .models import Nurse_Schedule, Nurse_Schedule_Manager
+from .models import NurseScheduleTracker
 from flask import flash
 from . import db
 from datetime import datetime, timedelta
-import time
 
 
 def check_schedules_for_conflict(schedules, start_time, end_time, schedule_id=None, updating=False):
@@ -59,8 +58,8 @@ def str_to_datetime_v2(date_str):
 def add_schedule_count(start_time, end_time):
     time_slots = []
     while start_time <= end_time:
-        start_datehour = start_time.strftime("%Y-%m-%d %H:00")
-        time_slot = Nurse_Schedule_Manager.query.filter_by(timestamp=start_datehour).first()
+        start_datehour_str = start_time.strftime("%Y-%m-%d %H:00")
+        time_slot = NurseScheduleTracker.query.filter_by(timestamp=start_datehour_str).first()
         if time_slot:
             if time_slot.count == 12:
                 flash(
@@ -70,7 +69,7 @@ def add_schedule_count(start_time, end_time):
                 return 0
             time_slots.append(time_slot)
         else:
-            new_time_slot = Nurse_Schedule_Manager(timestamp=start_datehour, count=0)
+            new_time_slot = NurseScheduleTracker(timestamp=start_datehour_str, count=0)
             db.session.add(new_time_slot)
             time_slots.append(new_time_slot)
         start_time += timedelta(hours=1)
@@ -82,8 +81,8 @@ def add_schedule_count(start_time, end_time):
 
 def remove_schedule_count(start_time, end_time):
     while start_time <= end_time:
-        start_datehour = start_time.strftime("%Y-%m-%d %H:00")
-        time_slot = Nurse_Schedule_Manager.query.filter_by(timestamp=start_datehour).first()
+        start_datehour_str = start_time.strftime("%Y-%m-%d %H:00")
+        time_slot = NurseScheduleTracker.query.filter_by(timestamp=start_datehour_str).first()
         if time_slot:
             time_slot.count -= 1
             if time_slot.count <= 0:
@@ -93,7 +92,7 @@ def remove_schedule_count(start_time, end_time):
 
 
 def remove_inactive_schedules():
-    schedules = Nurse_Schedule_Manager.query.all()
+    schedules = NurseScheduleTracker.query.all()
     for schedule in schedules:
         if datetime.strptime(schedule.timestamp, "%Y-%m-%d %H:00") < datetime.now() - timedelta(days=1):
             print("Deleted schedule time-slot" + schedule.timestamp)

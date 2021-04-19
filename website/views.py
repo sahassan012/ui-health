@@ -1,12 +1,8 @@
-from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_sqlalchemy import SQLAlchemy
-from .models import Nurse, User, Patient, Nurse_Schedule, Nurse_Schedule_Manager, Vaccine
-from datetime import datetime
-from . import db
+from werkzeug.security import generate_password_hash
+from .models import Nurse, User, Patient, Vaccine
 from .services import *
-import json
 
 views = Blueprint('views', __name__)
 DB_NAME = "database.db"
@@ -176,7 +172,7 @@ def view_patients():
 def view_all_nurse_schedules():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
         return render_template("/errors/403.html", user=current_user)
-    schedules = Nurse_Schedule.query.all()
+    schedules = NurseSchedule.query.all()
     return render_template("/admin/view_all_nurse_schedules.html", user=current_user, nurse_schedules=schedules)
 
 
@@ -237,7 +233,7 @@ def delete_vaccine(id):
 def view_nurse_schedule():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_nurse:
         return render_template("/errors/403.html", user=current_user)
-    schedule = Nurse_Schedule.query.filter_by(nurseID=current_user.id).all()
+    schedule = NurseSchedule.query.filter_by(nurseID=current_user.id).all()
     return render_template("/nurse/view_nurse_schedule.html", user=current_user, schedule=schedule)
 
 
@@ -253,10 +249,10 @@ def create_nurse_schedule():
             return redirect(url_for('views.view_nurse_schedule'))
         start_time = str_to_datetime(start_time_str)
         end_time = str_to_datetime(end_time_str)
-        nurse_schedule_lst = Nurse_Schedule.query.filter_by(nurseID=current_user.id)
+        nurse_schedule_lst = NurseSchedule.query.filter_by(nurseID=current_user.id)
         if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time):
             if add_schedule_count(start_time, end_time):
-                new_schedule = Nurse_Schedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
+                new_schedule = NurseSchedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
                 db.session.add(new_schedule)
                 db.session.commit()
                 flash('Schedule created Sucessfully!', category='success')
@@ -266,12 +262,12 @@ def create_nurse_schedule():
 @views.route('/update-nurse-schedule', methods=['GET', 'POST'])
 def update_nurse_schedule():
     if request.method == 'POST':
-        data = Nurse_Schedule.query.get(request.form.get('scheduleID'))
+        data = NurseSchedule.query.get(request.form.get('scheduleID'))
         start_time_str = request.form['start_time']
         end_time_str = request.form['end_time']
         start_time = str_to_datetime_v2(start_time_str)
         end_time = str_to_datetime_v2(end_time_str)
-        nurse_schedule_lst = Nurse_Schedule.query.filter_by(nurseID=current_user.id)
+        nurse_schedule_lst = NurseSchedule.query.filter_by(nurseID=current_user.id)
         if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time, data.scheduleID, True):
             data.start_time = start_time
             data.end_time = end_time
@@ -282,7 +278,7 @@ def update_nurse_schedule():
 
 @views.route('/delete-nurse-schedule/<id>/', methods=['GET', 'POST'])
 def delete_nurse_schedule(id):
-    schedule = Nurse_Schedule.query.get(id)
+    schedule = NurseSchedule.query.get(id)
     remove_schedule_count(schedule.start_time, schedule.end_time)
     db.session.delete(schedule)
     db.session.commit()
