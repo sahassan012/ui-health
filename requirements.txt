@@ -4,3 +4,4 @@ flask-login
 flask-admin
 SQLAlchemy~=1.4.9
 Werkzeug~=1.0.1
+flake8

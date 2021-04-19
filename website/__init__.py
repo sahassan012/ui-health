@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+import os
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -10,6 +11,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
 def start_app():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    print(os.getcwd())
+    os.system("flake8")
     app.config['SECRET_KEY'] = 'CS480-Project'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + DB_NAME
     db.init_app(app)
@@ -22,9 +26,11 @@ def start_app():
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
+
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
+
     return app
 
 
