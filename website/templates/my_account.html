@@ -4,7 +4,7 @@
       .white-panel{
         width: 70% !important;
         right: calc(15%) !important;
-        height: 1972px !important;
+        height:fit-content !important;
       }
       .login-reg-panel{
         height:2000px !important;
@@ -12,14 +12,21 @@
         transform: translateY(0%) !important;
         background-color: rgba(255, 255, 255, 0.9);
       }
+      .myAccountHeader{
+          margin-top: -50px;
+          margin-bottom: 15px;
+      }
+      .myAccountSubHeader{
+          margin-bottom: 25px;
+      }
     </style>
     <form action="{{url_for('views.update_account_info')}}" method="POST">
       <div class="login-reg-panel">
         <div class="white-panel">
           <div class="login-show show-log-panel">
-            <div style="padding-top:60px">
-              <h2>Update your information</h2>
-              
+            <div>
+              <h1 class="myAccountHeader">My Account</h1>
+              <h2 class="myAccountSubHeader">Update your information</h2>
               {% if user.is_patient %}
                 <div class="form-group">
                   <input type="hidden"  name="patientID" value="{{user.id}}">

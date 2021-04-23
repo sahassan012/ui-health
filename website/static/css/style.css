@@ -159,7 +159,7 @@ a{
 }
 
 .submit-button{
-    margin-top: -35px;
+    margin-top: 15px;
     max-width: 150px;
     width: 100%;
     background: #444444;
@@ -260,6 +260,7 @@ a{
    }
 
    h1{
+       color: #ce4409;
        padding-top: 25px;
    }
 

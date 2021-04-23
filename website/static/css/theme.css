@@ -114,7 +114,6 @@ h3,
 h4,
 h5,
 h6 {
-    color: #333333;
     font-weight: 700;
     margin: 0;
     line-height: 1.2;
@@ -2533,7 +2532,7 @@ section {
     min-width: 300px;
     right: -300px;
     top: 61px;
-    background: #ff570799;
+    background: #fb4803cc;
     text-align: left;
     -webkit-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
