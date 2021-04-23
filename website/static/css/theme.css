@@ -2528,11 +2528,12 @@ section {
 }
 
 .setting-menu {
+    display: none !important;
     position: absolute;
     min-width: 300px;
     right: -300px;
     top: 61px;
-    background: #fff;
+    background: #ff570799;
     text-align: left;
     -webkit-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.1);
@@ -2545,6 +2546,7 @@ section {
     -moz-transition: all .5s ease;
     transition: all .5s ease;
     z-index: 5;
+    height: 178px;
 }
 
 .setting-menu:before {
@@ -2561,9 +2563,9 @@ section {
     right: 47px;
 }
 
-.setting-menu .account-dropdown__body {
-    border-bottom: 1px solid #f2f2f2;
-}
+/*.setting-menu .account-dropdown__body {*/
+/*    border-bottom: 1px solid #f2f2f2;*/
+/*}*/
 
 .setting-menu .account-dropdown__item a {
     color: #555;
@@ -2575,6 +2577,7 @@ section {
 
 .show-sidebar {
     right: 0;
+    display:block !important;
 }
 
 .header-desktop3 {
