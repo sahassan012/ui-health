@@ -1,4 +1,9 @@
 {% extends "base.html" %} {% block title %}View Nurse Schedules{% endblock %} {% block content %}
+<style>
+.container {
+    max-width: 97% !important;
+}
+</style>
 {% block body %}
       <link rel="stylesheet" style="text:css" href="../static/css/nurse-schedules-style.css"/>
     <h1 align="center">View All Nurse Schedules</h1>
@@ -60,9 +65,9 @@
 
             <div class="events">
                 <ul class="wrap">
-            {% for key, val in timeslots.items() %}
+            {% for date, val in timeslots.items() %}
                     <li class="events-group">
-                        <div class="top-info"><span>{{ key }}</span></div>
+                        <div class="top-info"><span>{{ date }}</span></div>
                         <ul>
                         {% for hour, end_and_count in val.items() %}
                             {% set start_hour = hour %}

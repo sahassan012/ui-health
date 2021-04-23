@@ -3,8 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-<!-- 
-    <link href="../static/css/bootstrap.css" rel="stylesheet" media="screen">  -->
     <link href="../static/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
     <link
       rel="stylesheet"
@@ -23,9 +21,11 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" style="text/css" href="../static/css/style.css"/>
-
-
     
+    <link href="../static/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="../static/css/theme.css" rel="stylesheet" media="all">
+    <link href="../static/css/animsition.min.css" rel="stylesheet" media="all">
+
     <script type="text/javascript" src="../static/js/site.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -47,39 +47,52 @@
       <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbar">
+        
+        <img src="/static/img/smaller-logo.png" width="45" height="45" style="overflow: hidden; margin-left: 15px; margin-right: 15px;">
 
         <!-- Left header -->
         <div class="navbar-nav mr-auto">
-          {% if user.is_admin %}
-          <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="register_nurse" href="/register-nurse">Register Nurse</a>
-          <a class="nav-item nav-link" id="view_patient" href="/view-patients">View Patients</a>
-          <a class="nav-item nav-link" id="view_all_nurse_schedules" href="/view-all-nurse-schedules">Nurse Schedule</a>
-          <a class="nav-item nav-link" id="view_vaccine_inventory" href="/view-vaccine-inventory">Inventory</a>
-          {% elif user.is_patient %}
-          <a class="nav-item nav-link" id="home" href="/">Home</a>
-          {% elif user.is_nurse %}
-          <a class="nav-item nav-link" id="home" href="/">Home</a>
-          <a class="nav-item nav-link" id="view_nurse_schedule" href="/view-nurse-schedule">My Schedule</a>
-          {% else %}
-          <a class="nav-item nav-link" id="login" href="/login">Back to Login</a>
-          {% endif %}
+            {% if user.is_admin %}
+            <a class="nav-item nav-link" id="home" href="/">Home</a>
+            <a class="nav-item nav-link" id="register_nurse" href="/register-nurse">Register Nurse</a>
+            <a class="nav-item nav-link" id="view_patient" href="/view-patients">View Patients</a>
+            <a class="nav-item nav-link" id="view_all_nurse_schedules" href="/view-all-nurse-schedules">Nurse Schedule</a>
+            <a class="nav-item nav-link" id="view_vaccine_inventory" href="/view-vaccine-inventory">Inventory</a>
+            {% elif user.is_patient %}
+            <a class="nav-item nav-link" id="home" href="/">Home</a>
+            {% elif user.is_nurse %}
+            <a class="nav-item nav-link" id="home" href="/">Home</a>
+            <a class="nav-item nav-link" id="view_nurse_schedule" href="/view-nurse-schedule">My Schedule</a>
+            {% else %}
+            <a class="nav-item nav-link" id="login" href="/login">Back to Login</a>
+            {% endif %}
         </div>
 
         <!-- Right header -->
         <div class="navbar-nav ml-auto">
-          {% if user.is_authenticated %}
-            <div class="dropdown">
-              <button onclick="myFunction()" class="dropbtn nav-item nav-link">My Account</button>
-              <div id="myDropdown" class="dropdown-content">
-                {% if not user.is_admin %}
-                <a href="/my-account">Update My Info</a>
-                {% endif %}
-                <a id="logout" href="/logout">Logout</a>
-              </div>
-            </div>
+          {% if user.is_authenticated %}  
             <a class="nav-item nav-link" style="padding-top:10px">Hello, {{user.first_name}}!</a>
-            <img src="/static/img/smaller-logo.png" width="45" height="45" style="overflow: hidden;">
+            <div class="header-button-item mr-0 js-sidebar-btn">
+              <i class="zmdi zmdi-menu"></i>
+            </div>
+            <div class="setting-menu js-right-sidebar d-none d-lg-block">
+                <div class="account-dropdown__body">
+                    {% if not user.is_admin %}
+                    <div class="account-dropdown__item">
+                        <a href="/my-account">
+                            <i class="zmdi zmdi-account"></i>My Account</a>
+                    </div>
+                    {% endif %}
+                    <div class="account-dropdown__item">
+                        <a href="#">
+                            <i class="zmdi zmdi-settings"></i>Setting</a>
+                    </div>
+                    <div class="account-dropdown__item">
+                        <a href="/logout">
+                            <i class="zmdi zmdi-sign-in"></i>Log Out</a>
+                    </div>
+                </div>
+            </div>
           {% endif %}
           </div>
       </div>
@@ -124,11 +137,12 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-
     <script type="text/javascript" src="../static/jquery/jquery-1.8.3.min.js" charset="UTF-8"></script>
     <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../static/js/bootstrap-datetimepicker.js" charset="UTF-8"></script>
     <script type="text/javascript" src="../static/js/nurse-schedules.js"></script>
+    <script type="text/javascript" src="../static/js/animsition.min.js"></script>
+    <script type="text/javascript" src="../static/js/main.js"></script>
     <script type="text/javascript">
     $('.form_datetime').datetimepicker({
         weekStart: 1,

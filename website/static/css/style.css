@@ -242,7 +242,9 @@ a{
    #register_nurse:hover, 
    .submit-button:hover,
    #view_patient:hover,
-   #view_all_nurse_schedules:hover{
+   #view_all_nurse_schedules:hover,
+   #view_nurse_schedule:hover
+   {
      background-color: #a83808;
      border-radius: 2px;
    }

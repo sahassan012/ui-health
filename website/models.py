@@ -67,3 +67,12 @@ class Vaccine(db.Model, UserMixin):
     num_doses = db.Column(db.Integer)
     description = db.Column(db.String(250))
     num_on_hold = db.Column(db.Integer)
+
+
+class VaccinationRecord(db.Model, UserMixin):
+    vaccinationID = db.Column(db.Integer, primary_key=True)
+    patientID = db.Column(db.Integer)
+    nurseID = db.Column(db.Integer)
+    vaccineID = db.Column(db.Integer)
+    scheduled_time = db.Column(db.DateTime())
+    completed = db.Column(db.Boolean)
