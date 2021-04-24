@@ -1,12 +1,19 @@
 {% extends "base.html" %} {% block title %}View Nurse Schedules{% endblock %} {% block content %}
 <style>
-.container {
-    max-width: 97% !important;
-}
+    .container {
+        max-width: 97% !important;
+    }
+    #legendImg{
+        float:right;
+        margin-top: -55px;
+        height: 60px;
+        margin-right: -42px;
+    }
 </style>
 {% block body %}
       <link rel="stylesheet" style="text:css" href="../static/css/nurse-schedules-style.css"/>
     <h1 align="center">View All Nurse Schedules</h1>
+    <img id="legendImg" src="/static/img/legend-image.png"/>
     <div class="container">
         <div class="cd-schedule loading">
             <div class="timeline">
