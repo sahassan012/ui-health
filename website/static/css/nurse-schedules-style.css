@@ -151,6 +151,10 @@ Main Components
   margin-bottom: 30px;
 }
 
+.cd-schedule .events .events-group .top-info{
+  background: #f1a2818f;
+}
+
 .cd-schedule .events .top-info {
   width: 100%;
   padding: 0 5%;
@@ -222,7 +226,7 @@ Main Components
   .cd-schedule .events .events-group {
     width: 14%;
     float: left;
-    border: 1px solid #EAEAEA;
+    border: 1px solid #f1a2814d;
     /* reset style */
     margin-bottom: 0;
   }

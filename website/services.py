@@ -9,8 +9,12 @@ def check_schedules_for_conflict(schedules, start_time, end_time, schedule_id=No
         flash("The given start time was after the end time.", category='error')
         return 0
     elif start_time < datetime.today() or end_time < datetime.today():
-        flash("Start and end dates must be in the future.", category='error')
+        flash("Start and end date must be in the future.", category='error')
         return 0
+    elif start_time > datetime.today() + timedelta(days=7) or end_time > datetime.today() + timedelta(days=7):
+        flash("Start and end date must be within 7 days from today.", category='error')
+        return 0
+
     for schedule in schedules:
         if schedule.start_time == start_time and schedule.end_time == end_time:
             flash("The given start and end time already exist.", category='error')
