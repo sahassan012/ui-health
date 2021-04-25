@@ -15,7 +15,7 @@ body{
 }
 a{
   text-decoration:none;
-  color:#444444;
+  color:#c45c07;
 }
 .login-reg-panel{
     position: relative;
@@ -36,7 +36,7 @@ a{
     right:calc(50% - 50px);
     transition:.3s ease-in-out;
     z-index:0;
-    box-shadow: 0 0 15px 9px #00000096;
+    box-shadow: 0 0 15px 9px #d3000096;
 }
 .login-reg-panel input[type="radio"]{
     position:relative;
@@ -267,4 +267,3 @@ a{
    .table{
         box-shadow: 0 0 10px 5px rgba(206, 27, 0, 0.39) !important;
     }
-

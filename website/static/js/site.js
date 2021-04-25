@@ -52,6 +52,3 @@
     }
     setInterval(generateLocks,interval);
     generateLocks();
-
-      
-    

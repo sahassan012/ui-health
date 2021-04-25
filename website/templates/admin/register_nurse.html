@@ -82,7 +82,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label>Phone Number:</label>
-                                                <input id="phoneNumber" type="text" class="form-control" name="phoneNumber" value="{{row.phoneNumber}}">
+                                                <input id="phoneNumber" type="text" class="form-control" name="phoneNumber"
+                                                    placeholder="6301112222" pattern="[0-9]{10}" required maxlength=10 value="{{row.phoneNumber}}">
                                             </div>
                                             <div class="form-group">
                                                 <label>Address:</label>
@@ -139,7 +140,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Phone Number:</label>
-                                    <input type="text" class="form-control" name="phoneNumber" required="1">
+                                    <input type="text" class="form-control" name="phoneNumber" pattern="[0-9]{10}" maxlength=10 required="1">
                                 </div>
                                 <div class="form-group">
                                     <label>Address:</label>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    {% block head %}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="../static/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
@@ -33,6 +34,7 @@
 
 
     <title>{% block title %}Home{% endblock %}</title>
+    {% endblock %}
   </head>
   <body id="bodyContainer" style="overflow: auto;">
 

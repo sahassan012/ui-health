@@ -80,6 +80,8 @@
                     class="form-control"
                     id="ssn"
                     name="ssn"
+                    pattern="[0-9]{9}" required
+                    maxlength=9
                     placeholder="Enter Social Security #"
                     value="{{user_patient.SSN}}"
                   />
@@ -146,7 +148,9 @@
                     class="form-control"
                     id="phoneNumber"
                     name="phoneNumber"
-                    placeholder="Enter Phone Number"
+                    placeholder="6301112222"
+                    pattern="[0-9]{10}" required
+                    maxlength=10
                     value="{{user_patient.phone_number}}"
                   />
                 </div>
@@ -185,7 +189,9 @@
                     class="form-control"
                     id="phoneNumber"
                     name="phoneNumber"
-                    placeholder="Enter Phone Number"
+                    placeholder="6301112222"
+                    pattern="[0-9]{10}" required
+                    maxlength=10
                     value="{{user_nurse.phoneNumber}}"
                   />
                 </div>
