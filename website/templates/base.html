@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
   <head>
     {% block head %}
@@ -62,6 +62,7 @@
             <a class="nav-item nav-link" id="view_vaccine_inventory" href="/view-vaccine-inventory">Inventory</a>
             {% elif user.is_patient %}
             <a class="nav-item nav-link" id="home" href="/">Home</a>
+            <a class="nav-item nav-link" id="schedule_appointment" href="/schedule-appointment">Schedule Appointment</a>
             {% elif user.is_nurse %}
             <a class="nav-item nav-link" id="home" href="/">Home</a>
             <a class="nav-item nav-link" id="view_nurse_schedule" href="/view-nurse-schedule">My Schedule</a>

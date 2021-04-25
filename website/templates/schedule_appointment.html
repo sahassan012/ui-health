@@ -1,0 +1,109 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} 
+{% block head %}
+     <!--link in head and add style sheet -->
+    {{ super() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.6.0/main.min.js"></script>
+{% endblock %} 
+
+{% block content %}
+<h1 align="center">Select an Available Date</h1>
+<!-- Calendar -->
+<div id="calendar"></div>
+    <script>
+        var eventObject;
+        let calendarEl = document.getElementById
+        ('calendar');
+
+        let calendar = new FullCalendar.Calendar
+        (calendarEl, {
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            editable: true,
+            selectable: true,
+            aspectRatio: 1.5,
+            allDaySlot: false,
+            slotMinTime: "08:00:00",
+            slotMaxTime: "17:00:00",
+            dayMaxEventRows: true,
+            views: { timeGrid: {
+                dayMaxEventRows: 6
+            }},
+            eventClick: function(info) {
+                var eventInfo = info.event.start;
+                var parEl = document.getElementById("eventDateTime");
+                document.getElementById("appt_dateandtime").value = info.event.startStr;
+                parEl.innerHTML = eventInfo;
+                eventObject = info.event;
+                $("#addEvent").modal();
+            },
+            events: [
+                {% for event in events %}
+                {
+                    color: '#378006',
+                    title: '{{event.available}}',
+                    start: '{{event.date}}',
+                    allDay: false,
+                    editable: false
+                },
+                {% endfor %}
+            ]
+        });
+
+        calendar.render();
+
+        /* Add New Appointment to Calender */
+        function addCalenderAppt() {
+            /* update event title and color */ 
+            var sameStart = eventObject.start;
+            eventObject.remove();
+            calendar.addEvent({title: 'MY APPOINTMENT', start: sameStart, allDay: false, color: '#ce5f05',
+                               editable: false});
+
+            /* update db */
+            alert('Success!' );
+            $("#addEvent").modal('hide');
+        }
+
+    </script>
+    
+    <!-- Modal: confirm schedule appointment -->
+    <div class="modal fade" id="addEvent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true" data-backdrop="false">
+        <div class="modal-dialog" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <!--Header-->
+            <div class="modal-header">
+            <h5 class="modal-title" id="confirmModalLabel">Confirm Appointment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+    
+            <!--Body-->
+            <div class="modal-body">What:
+                <p>COVID-19 Vaccination</p>Where: 
+                <p>University of Illinois Hospital <br> 1200 W Harrison St, Chicago IL</p>When: 
+                <p id="eventDateTime"></p>
+            </div>
+    
+            <!--Footer-->
+            <div class="modal-footer justify-content-center">
+                <form action="{{url_for('views.create_appointment')}}" method="POST">
+                    <input id="appt_dateandtime" type="hidden" class="form-control" name="appt_dateandtime" value="">
+                    <button onclick="addCalenderAppt()" class="btn btn-primary" type="submit">Confirm</button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+        <!--/.Content-->
+        </div>
+    </div>
+    <!-- Modal: confirm schedule appointment -->
+
+
+{% endblock %}
