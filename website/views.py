@@ -1,12 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from werkzeug.security import generate_password_hash
-from .models import Nurse, User, Patient, NurseSchedule, Vaccine, NurseScheduleTracker
+from .models import Nurse, User, Patient, NurseSchedule, Vaccine, NurseScheduleTracker, Appointment
 from .services import check_schedules_for_conflict, remove_schedule_count, \
     str_to_datetime, str_to_datetime_v2, add_schedule_count, convert_timeslots_to_dictionary
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from .models import Nurse, User, Patient, Nurse_Schedule, Vaccine, Appointment
 from . import db
 import json
 import datetime
@@ -270,7 +268,7 @@ def schedule_appointment():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_patient:
         return render_template("403.html", user=current_user)
     vaccines = Vaccine.query.all()
-    schedules = Nurse_Schedule.query.all()
+    schedules = NurseSchedule.query.all()
 
     # add appointments from database first
     events=[]
