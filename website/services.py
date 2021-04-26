@@ -1,4 +1,6 @@
-from .models import NurseScheduleTracker
+from flask_login import current_user
+
+from .models import NurseScheduleTracker, Appointment
 from flask import flash
 from . import db
 from datetime import datetime, timedelta
@@ -120,3 +122,17 @@ def convert_timeslots_to_dictionary(timeslots):
             timeslot_dictionary[timeslot_day_str] = new_slot
     timeslot_dictionary = dict(sorted(timeslot_dictionary.items()))
     return timeslot_dictionary
+
+
+def get_scheduled_appointments(id):
+    appts = Appointment.query.filter_by(patientID=id)
+    events = {}
+    for appt in appts:
+        event = {'available': 'Your Appointment', 'color': '#ce4409'}
+        events[appt.appointment_time] = event
+    return events
+
+
+def daterange(start, end):
+    for n in range(int((end - start).days) + 1):
+        yield start + timedelta(n)

@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
   <head>
-    {% block head %}
+{#    {% block head %}#}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="../static/css/bootstrap-datetimepicker.min.css" rel="stylesheet" media="screen">
@@ -26,15 +26,18 @@
     <link href="../static/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
     <link href="../static/css/theme.css" rel="stylesheet" media="all">
     <link href="../static/css/animsition.min.css" rel="stylesheet" media="all">
+    <link href="../static/css/nurse-calendar.css" rel="stylesheet" media="all">
+    <link href="../static/css/nurse-calendar.min.css" rel="stylesheet" media="all">
 
     <script type="text/javascript" src="../static/js/site.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
+    <script type="text/javascript" src="../static/js/nurse-calendar.js"></script>
+    <script type="text/javascript" src="../static/js/nurse-calendar.min.js"></script>
 
     <title>{% block title %}Home{% endblock %}</title>
-    {% endblock %}
+{#    {% endblock %}#}
   </head>
   <body id="bodyContainer" style="overflow: auto;">
 
@@ -159,6 +162,14 @@
     $('.form_datetime').datetimepicker({
         startDate: Date.now()
     });
+    document.addEventListener("DOMContentLoaded", function(event) {
+        var scrollpos = localStorage.getItem('scrollpos');
+        if (scrollpos) window.scrollTo(0, scrollpos);
+    });
+
+    window.onbeforeunload = function(e) {
+        localStorage.setItem('scrollpos', window.scrollY);
+    };
   </script>
   </body>
 </html>

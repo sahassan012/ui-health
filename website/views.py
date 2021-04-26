@@ -2,16 +2,17 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from .models import Nurse, User, Patient, NurseSchedule, Vaccine, NurseScheduleTracker, Appointment
 from .services import check_schedules_for_conflict, remove_schedule_count, \
-    str_to_datetime, str_to_datetime_v2, add_schedule_count, convert_timeslots_to_dictionary
+    str_to_datetime, str_to_datetime_v2, add_schedule_count, convert_timeslots_to_dictionary, \
+    get_scheduled_appointments, daterange
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from . import db
 import json
-import datetime
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 views = Blueprint('views', __name__)
 DB_NAME = "database.db"
+
 
 @views.route('/', methods=['GET', 'POST'])
 @login_required
@@ -179,7 +180,8 @@ def view_all_nurse_schedules():
         return render_template("/errors/403.html", user=current_user)
     schedules = NurseSchedule.query.all()
     timeslots = convert_timeslots_to_dictionary(NurseScheduleTracker.query.all())
-    return render_template("/admin/view_all_nurse_schedules.html", user=current_user, nurse_schedules=schedules, timeslots=timeslots)
+    return render_template("/admin/view_all_nurse_schedules.html", user=current_user, nurse_schedules=schedules,
+                           timeslots=timeslots)
 
 
 @views.route('/view-vaccine-inventory')
@@ -234,71 +236,41 @@ def delete_vaccine(id):
     flash("Vaccine Deleted Successfully")
     return redirect(url_for('views.view_vaccine_inventory'))
 
+
 @views.route('/create-appointment', methods=['POST'])
 def create_appointment():
     if request.method == 'POST':
         appointment_time = request.form['appt_dateandtime']
-
-    # convert date/time from calender to "%Y-%m-%d %H:%M:%S" format
-    result = [letter.replace('T', ' ') for letter in appointment_time]
-    result = ''.join(result)
-
-    year = result[0:4]
-    month = result[5:7]
-    day = result[8:10]
-    hour = result[11:13]
-
-    appointment_time = datetime.datetime(int(year),int(month),int(day),int(hour))
-    
-    # check if appointment for THIS user already exists
-    new_appt = Appointment.query.filter_by(appointment_time=appointment_time).first() 
-    if new_appt:
-        flash('Appointment already scheduled. Please select another time.', category='error')
-    else:
-        new_appt = Appointment(appointment_time=appointment_time, patientID=current_user.id)
-        db.session.add(new_appt)
-        db.session.commit()
-        flash('Appointment created!', category='success')
-    
+        appointment_time = datetime.strptime(appointment_time, "%Y-%m-%dT%H:%M:00-05:00")
+        new_appt = Appointment.query.filter_by(appointment_time=appointment_time).first()
+        if new_appt:
+            flash('Appointment already scheduled. Please select another time.', category='error')
+        else:
+            new_appt = Appointment(appointment_time=appointment_time, patientID=current_user.id)
+            db.session.add(new_appt)
+            db.session.commit()
+            flash('Appointment created!', category='success')
     return redirect(url_for('views.schedule_appointment'))
-    
+
 
 @views.route('/schedule-appointment')
 def schedule_appointment():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_patient:
         return render_template("403.html", user=current_user)
-    vaccines = Vaccine.query.all()
-    schedules = NurseSchedule.query.all()
-
-    # add appointments from database first
-    events=[]
-    appts = Appointment.query.all()
-    for row in appts:
-        dbEvent = {'available': 'DB APPOINTMENT', 'date' : row.appointment_time}
-        events.append(dbEvent)
-
-    # create all M-F, 8-5 blank appt slots
-    weekdays = [5,6]
+    events = get_scheduled_appointments(current_user.id)
     start_time = 8
-    end_time = 17
-
-    def daterange(start, end):
-        for n in range(int ((end-start).days)+1):
-            yield start+timedelta(n)
-
-    start = datetime.datetime(2021,4,20) # make this to 'todays' date
-    end = datetime.datetime(2021,7,20) # make this automatically 1 year from 'today'
-
-    # fill in rest of slots with empty appt slots
-    for date in daterange(start, end):
-        if date.weekday() not in weekdays:
-            for t in range(start_time, end_time):
-                if (date+timedelta(hours=t)).strftime("%Y-%m-%d %H:%M:%S") not in [d['date'].strftime("%Y-%m-%d %H:%M:%S") for d in events]:
-                    events.append({'available' : "Schedule Appt", 'date' : date+timedelta(hours=t)})
-
-    return render_template("schedule_appointment.html", user=current_user, vaccines=vaccines, nurse_schedules=schedules,
-        events=events)
-    return redirect(url_for('views.view_vaccine_inventory'))
+    end_time = 20
+    min_end_appointment_date = datetime.now()
+    max_end_appointment_date = min_end_appointment_date + timedelta(days=14)
+    start_date = datetime(min_end_appointment_date.year, min_end_appointment_date.month, min_end_appointment_date.day)
+    end_date = datetime(max_end_appointment_date.year, max_end_appointment_date.month, max_end_appointment_date.day)
+    for _date in daterange(start_date, end_date):
+        for _time in range(start_time, end_time):
+            cur_date = _date + timedelta(hours=_time)
+            if cur_date not in events.keys():
+                event = {'available': "Schedule Appointment", 'color': "green"}
+                events[cur_date] = event
+    return render_template("patient/schedule_appointment.html", user=current_user, events=events)
 
 
 @views.route('/view-nurse-schedule')

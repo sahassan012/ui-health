@@ -52,3 +52,4 @@ UI-Health allows University of Illinois hospital(UIH) to maintain nurse schedule
 - 403 error page - https://codepen.io/Chesswithsean/pen/ZMwagQ
 - Nurses Schedules Page - https://codepen.io/oltika/pen/GNvdgV
 - Navbar account dropdown - https://github.com/puikinsh/CoolAdmin
+- Patient calendar - https://fullcalendar.io/demos
