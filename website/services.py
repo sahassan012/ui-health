@@ -1,6 +1,6 @@
 from flask_login import current_user
 
-from .models import NurseScheduleTracker, Appointment
+from .models import Nurse, User, Patient, NurseSchedule, Vaccine, NurseScheduleTracker, Appointment
 from flask import flash
 from . import db
 from datetime import datetime, timedelta
@@ -136,3 +136,22 @@ def get_scheduled_appointments(id):
 def daterange(start, end):
     for n in range(int((end - start).days) + 1):
         yield start + timedelta(n)
+
+
+def delete_user(id):
+    data = User.query.get(id)
+    db.session.delete(data)
+    db.session.commit()
+    flash("User Deleted Successfully")
+
+
+def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age, gender, race, occupation_class,
+                   medical_history_description, phone_number, address):
+    new_patient = Patient(patientID=patientID, username=username, first_name=first_name, mi_name=mi_name,
+                          last_name=last_name,
+                          SSN=SSN, age=age, gender=gender, race=race, occupation_class=occupation_class,
+                          medical_history_description=medical_history_description, phone_number=phone_number,
+                          address=address)
+    db.session.add(new_patient)
+    db.session.commit()
+    flash('Patient created!', category='success')

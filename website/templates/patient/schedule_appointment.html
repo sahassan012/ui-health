@@ -28,6 +28,7 @@
                             var eventInfo = info.event.start;
                             var parEl = document.getElementById("eventDateTime");
                             document.getElementById("appt_dateandtime").value = info.event.startStr;
+
                             parEl.innerHTML = eventInfo;
                             eventObject = info.event;
                             $("#addEvent").modal();
@@ -52,9 +53,12 @@
             eventObject.remove();
             calendar.addEvent({title: "Your Appointment", start: sameStart, allDay: false, editable: false});
             $("#addEvent").modal('hide');
+            $("#deleteAppt").disabled = false;
         }
     </script>
-    
+    <div style="margin-left: 179px; margin-top: -1184px;">
+        <a id="deleteAppt" href="{{ url_for('views.delete_appointment') }}" onclick="return confirm('Are you sure you want to delete current appointment?')" class="btn btn-primary" type="button" disabled>Cancel current appointment</a>
+    </div>
     <!-- Modal: confirm schedule appointment -->
     <div class="modal" id="addEvent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true" data-backdrop="false">
@@ -70,15 +74,21 @@
             </div>
     
             <!--Body-->
-            <div class="modal-body">What:
-                <p>COVID-19 Vaccination</p>Where: 
-                <p>University of Illinois Hospital <br> 1200 W Harrison St, Chicago IL</p>When: 
-                <p id="eventDateTime"></p>
+            <div class="modal-body">
+                <p>What: COVID-19 Vaccination</p>
+                <p>Where: University of Illinois Hospital <br> 1200 W Harrison St, Chicago IL</p>
+                <p>When: <span id="eventDateTime"></span> </p>
             </div>
     
             <!--Footer-->
             <div class="modal-footer justify-content-center">
                 <form action="{{url_for('views.create_appointment')}}" method="POST">
+                    <label for="vaccinetype">Vaccine Type:</label>
+                    <select name="vaccineType" id="vaccineType" style="margin-left:5px; width:100px">
+                        <option value="moderna">Moderna</option>
+                        <option value="pfizer">Pfizer</option>
+                        <option value="johnson&johnson">Johnson & Johnson</option>
+                    </select>
                     <input id="appt_dateandtime" type="hidden" class="form-control" name="appt_dateandtime" value="">
                     <button onclick="addCalenderAppt()" class="btn btn-primary" type="submit">Confirm</button>
                 </form>
@@ -89,4 +99,11 @@
         </div>
     </div>
     <!-- Modal: confirm schedule appointment -->
+<style>
+    .btn-primary {
+    color: #fff;
+    background-color: #ce4409;
+    border-color: #ce4409;
+}
+</style>
 {% endblock %}

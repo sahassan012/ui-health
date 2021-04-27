@@ -1,13 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
-from .models import Nurse, User, Patient, NurseSchedule, Vaccine, NurseScheduleTracker, Appointment
-from .services import check_schedules_for_conflict, remove_schedule_count, \
-    str_to_datetime, str_to_datetime_v2, add_schedule_count, convert_timeslots_to_dictionary, \
-    get_scheduled_appointments, daterange
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_sqlalchemy import SQLAlchemy
+from .services import *
+from werkzeug.security import generate_password_hash
 from . import db
-import json
 from datetime import date, timedelta, datetime
 
 views = Blueprint('views', __name__)
@@ -107,25 +102,6 @@ def create_user(email, first_name, password, is_admin, is_patient, is_nurse):
         flash('Account created!', category='success')
         return new_user
     return None
-
-
-def delete_user(id):
-    data = User.query.get(id)
-    db.session.delete(data)
-    db.session.commit()
-    flash("User Deleted Successfully")
-
-
-def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age, gender, race, occupation_class,
-                   medical_history_description, phone_number, address):
-    new_patient = Patient(patientID=patientID, username=username, first_name=first_name, mi_name=mi_name,
-                          last_name=last_name,
-                          SSN=SSN, age=age, gender=gender, race=race, occupation_class=occupation_class,
-                          medical_history_description=medical_history_description, phone_number=phone_number,
-                          address=address)
-    db.session.add(new_patient)
-    db.session.commit()
-    flash('Patient created!', category='success')
 
 
 @views.route('/my-account', methods=['GET', 'POST'])
@@ -241,15 +217,35 @@ def delete_vaccine(id):
 def create_appointment():
     if request.method == 'POST':
         appointment_time = request.form['appt_dateandtime']
+        vaccine_type = request.form.get('vaccineType')
         appointment_time = datetime.strptime(appointment_time, "%Y-%m-%dT%H:%M:00-05:00")
+
+        appointment_exists = Appointment.query.filter_by(patientID=current_user.id).first()
         new_appt = Appointment.query.filter_by(appointment_time=appointment_time).first()
-        if new_appt:
+        if appointment_exists:
+            flash('You can only schedule one appointment at a time. Please cancel existing appointment to reschedule.',
+                  category='error')
+        elif new_appt:
             flash('Appointment already scheduled. Please select another time.', category='error')
         else:
-            new_appt = Appointment(appointment_time=appointment_time, patientID=current_user.id)
+            new_appt = Appointment(appointment_time=appointment_time, patientID=current_user.id,
+                                   vaccine_type=vaccine_type)
             db.session.add(new_appt)
             db.session.commit()
             flash('Appointment created!', category='success')
+    return redirect(url_for('views.schedule_appointment'))
+
+
+@views.route('/delete-appointment', methods=['GET'])
+def delete_appointment():
+    if request.method == 'GET':
+        data = Appointment.query.filter_by(patientID=current_user.id).first()
+        if data:
+            db.session.delete(data)
+            db.session.commit()
+            flash("Appointment Cancelled Successfully", category='success')
+        else:
+            flash("There is no appointment to cancel.", category='error')
     return redirect(url_for('views.schedule_appointment'))
 
 

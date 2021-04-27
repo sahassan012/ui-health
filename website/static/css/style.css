@@ -267,3 +267,11 @@ a{
    .table{
         box-shadow: 0 0 10px 5px rgba(206, 27, 0, 0.39) !important;
     }
+    .fc-daygrid-event-harness{
+        cursor: pointer;
+    }
+
+    .fa-close:hover{
+        color:red;
+        z-index: 5;
+    }
