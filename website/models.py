@@ -48,6 +48,12 @@ class NurseSchedule(db.Model, UserMixin):
 
 
 class NurseScheduleTracker(db.Model):
+    timeslotID = db.Column(db.Integer, primary_key=True)
+    nurseID = db.Column(db.Integer)
+    timestamp = db.Column(db.String(35))
+
+
+class AllNursesScheduleTracker(db.Model):
     timestamp = db.Column(db.String(35), primary_key=True)
     count = db.Column(db.Integer)
 
@@ -68,6 +74,7 @@ class Vaccine(db.Model, UserMixin):
     num_doses = db.Column(db.Integer)
     description = db.Column(db.String(250))
     num_on_hold = db.Column(db.Integer)
+    num_doses_required = db.Column(db.Integer)
 
 
 class VaccinationRecord(db.Model, UserMixin):
