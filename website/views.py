@@ -326,3 +326,9 @@ def delete_nurse_schedule(id):
     db.session.commit()
     flash("Schedule Deleted Successfully")
     return redirect(url_for('views.view_nurse_schedule'))
+
+
+@views.route('/view-vaccination-history', methods=['GET'])
+def view_vaccination_history():
+    vaccine_history = VaccinationRecord.query.filter_by(patientID=current_user.id)
+    return render_template("patient/view_vaccination_history.html", user=current_user, history=vaccine_history)

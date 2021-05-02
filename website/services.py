@@ -1,7 +1,7 @@
 from flask_login import current_user
 
 from .models import Nurse, User, Patient, NurseScheduleTracker, NurseSchedule, Vaccine, AllNursesScheduleTracker, \
-    Appointment
+    Appointment, VaccinationRecord
 from flask import flash
 from . import db
 from datetime import datetime, timedelta
