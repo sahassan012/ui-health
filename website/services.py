@@ -18,7 +18,6 @@ def check_schedules_for_conflict(schedules, start_time, end_time, schedule_id=No
     elif start_time > datetime.today() + timedelta(days=7) or end_time > datetime.today() + timedelta(days=7):
         flash("Start and end date must be within 7 days from today.", category='error')
         return 0
-
     for schedule in schedules:
         if schedule.start_time == start_time and schedule.end_time == end_time:
             flash("The given start and end time already exist.", category='error')
@@ -92,7 +91,6 @@ def add_count_to_schedule_tracker(start_time, end_time, nurseID):
 def remove_schedule_count(start_time, end_time):
     """
     Delete all timeslots between given start and end time
-
     Update All Nurses Schedule Tracker table
     """
     while start_time <= end_time:
@@ -167,7 +165,6 @@ def daterange(start, end):
 def delete_user(id):
     """
     Delete user using the id given
-
     Query the row in the User table and delete it
     """
     data = User.query.get(id)
@@ -180,7 +177,6 @@ def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age
                    medical_history_description, phone_number, address):
     """
     Create patient using the fields given
-
     Make a new Patient model and save in Patients table
     """
     new_patient = Patient(patientID=patientID, username=username, first_name=first_name, mi_name=mi_name,
@@ -195,42 +191,36 @@ def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age
 
 def get_nurse_id_by_availability(appt_time):
     """
-    Return nurseID if a nurse is available at the given appointment time
-        otherwise return -1
+    Return nurseID
 
-    Query Nurse Schedule Tracker table and filter by date
+    Query Nurse Schedule Tracker table and filter by date. Iterate through timeslots
+    found and return nurseID of nurse that is available at the given time otherwise return -1
     """
     if isinstance(appt_time, datetime):
         date_str = appt_time.strftime("%Y-%m-%d %H:00")
     else:
         date_str = appt_time
-    # Get all the nurses working at the timeslot
     timeslot_nurseID = db.session.query(
         NurseScheduleTracker.timestamp.label('Timestamp'), NurseScheduleTracker.nurseID.label('NurseID')) \
         .where(NurseScheduleTracker.timestamp == date_str).all()
-
-    # Iterate through the nurses and check if any nurse has availability
     for timeslot_id in timeslot_nurseID:
         id = timeslot_id.NurseID
         timeslot = timeslot_id.Timestamp
-
-        # Get nurse's appointment count
         nurse_appointment_count = db.session.query(
             func.count(Appointment.appointmentID).label('AppointmentCount')) \
             .where((Appointment.nurseID == id) & (Appointment.appointment_time == timeslot)).first()
-
         num_appointments = nurse_appointment_count[0]
         if num_appointments < 10:
-            # We found atleast one nurse with availability
             return id
     return -1
 
 
 def get_nurse_appointment_counts_by_timeslot(cur_date):
     """
-    Return query result of all timeslots and nurseIDs of nurses working at the timeslot
+    Return query result
 
-    Query Nurse Schedule Tracker table and filter by date
+    Query Nurse Schedule Tracker table of all timeslots and nurseIDs
+    of nurses working at the timeslot and filter by date
     """
     date_str = cur_date.strftime("%Y-%m-%d %H:00")
     timeslot_nurseID = db.session.query(
@@ -278,9 +268,10 @@ def fetch_calendar_events_based_on_availability(events, start_date, end_date, st
 
 def get_vaccine_count_by_name(vaccine_type):
     """
-    Return an int of vaccine count for given vaccine name
+    Return int
 
-    Query and filter by vaccine type and return its count
+    Query vaccine count for given vaccine name and filter by vaccine type
+    return its count
     """
     data = Vaccine.query.filter_by(name=vaccine_type).first()
     return data.num_doses if data else 0
@@ -289,7 +280,6 @@ def get_vaccine_count_by_name(vaccine_type):
 def decrease_vaccine_count(vaccine_type):
     """
     Decrease vaccine count of given vaccine type
-
     Query and filter by vaccine type and decrement count for doses and increment count on hold
     """
     data = Vaccine.query.filter_by(name=vaccine_type).first()
@@ -301,7 +291,6 @@ def decrease_vaccine_count(vaccine_type):
 def increase_vaccine_count(vaccine_type):
     """
     Increase vaccine count of given vaccine type
-
     Query and filter by vaccine type and increment count for doses and decrease count on hold
     """
     data = Vaccine.query.filter_by(name=vaccine_type).first()
