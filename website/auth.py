@@ -28,6 +28,8 @@ def login():
                         flash('Choose correct account type.', category='error')
                 else:
                     flash('Incorrect password, try again.', category='error')
+            else:
+                flash('Username/Email does not exist.', category='error')
         elif usertype == 'admin':
             user = User.query.filter_by(email=username).first()
             if user:
