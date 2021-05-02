@@ -259,7 +259,7 @@ def delete_appointment():
 @views.route('/schedule-appointment')
 def schedule_appointment():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_patient:
-        return render_template("403.html", user=current_user)
+        return render_template("/errors/403.html", user=current_user)
     events = get_scheduled_appointments(current_user.id)
     start_time = 8
     end_time = 20
