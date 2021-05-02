@@ -332,3 +332,12 @@ def delete_nurse_schedule(id):
 def view_vaccination_history():
     vaccine_history = VaccinationRecord.query.filter_by(patientID=current_user.id)
     return render_template("patient/view_vaccination_history.html", user=current_user, history=vaccine_history)
+
+
+@views.route('/view-patient-history/<int:id>/', methods=['GET', 'POST'])
+def view_patient_history(id):
+    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
+        return render_template("/errors/403.html", user=current_user)
+    appointments = Appointment.query.filter_by(patientID=id).all()
+    vaccinations = VaccinationRecord.query.filter_by(patientID=id).all()
+    return render_template("admin/view_patient_history.html", user=current_user, appointments=appointments, vaccinations=vaccinations)

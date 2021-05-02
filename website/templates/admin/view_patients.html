@@ -15,9 +15,9 @@
                 <div class="jumbotron p-3">
 
                     <!-- Title and button -->
-                    <!-- <div style="padding-bottom:12px">
-                        <h2>Manage <b>Nurses</b> <button id="addNewNurseBtn" type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#mymodal">Add New Nurse</button></h2>
-                    </div> -->
+                    <div style="padding-bottom:12px">
+                        <h2>All <b>Patients</b></h2>
+                    </div>
                     <!-- Grid -->
                     <div>
                         <table class="table table-hover table-dark">
@@ -36,9 +36,9 @@
                                 <th>Medical History Description</th>
                                 <th>Phone Number</th>
                                 <th>Address</th>
-                                <!-- <th style="text-align: center;">Action</th> -->
+                                <th style="text-align: center;">Action</th>
                             </tr>
-                            
+
                             <!-- Records -->
                             {% for row in patients %}
                             <tr>
@@ -55,120 +55,18 @@
                                 <td>{{row.medical_history_description}}</td>
                                 <td>{{row.phone_number}}</td>
                                 <td>{{row.address}}</td>
-                                <!-- <td style="width: 155px">
-                                    <a href="/update-nurse/{{row.employeeID}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.employeeID}}">Edit</a>
-                                    <a href="{{ url_for('views.delete_nurse', id = row.employeeID)  }}" onclick="return confirm('Are you sure you want to delete this record?')"class="btn btn-danger btn-xs">Delete</a>
-                                </td> -->
+                                <td style="width: 155px">
+                                    <div style="display: flex">
+                                        <a href="/view-patient-history/{{row.patientID}}/" style="margin-right: 10px;" class="btn btn-primary btn-xs" >Patient History</a>
+                                    </div>
+                                </td>
                             </tr>
-                        <!-- Modal Edit Nurse -->
-                        <div id="modaledit{{row.employeeID}}" class="modal fade" role="dialog">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Edit Nurse Information</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form action="{{url_for('views.update_nurse')}}" method="POST">
-                                            <div class="form-group">
-                                                <label>Email:</label>
-                                                <input id="email" type="text" class="form-control" name="email" value="{{row.email}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Username:</label>
-                                                <input type="hidden"  name="employeeID" value="{{row.employeeID}}">
-                                                <input id="username" type="text" class="form-control" name="username" value="{{row.username}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Gender:</label>
-                                                <input id="gender" type="text" class="form-control" name="gender" value="{{row.gender}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Name:</label>
-                                                <input id="name" type="text" class="form-control" name="name" value="{{row.name}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Age:</label>
-                                                <input id="age" type="text" class="form-control" name="age" value="{{row.age}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Phone Number:</label>
-                                                <input id="phoneNumber" type="text" class="form-control" name="phoneNumber" value="{{row.phoneNumber}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Address:</label>
-                                                <input id="address" type="text" class="form-control" name="address" value="{{row.address}}">
-                                            </div>
-                                            <div class="form-group">
-                                                <button class="btn btn-primary" type="submit">Update</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> 
-                        {% endfor %}
-                    <!-- Modal Edit Nurse end-->    
-                    </table>
-                </div>
-            </div>
-            <!-- Modal Add Nurse-->
-            <div id="mymodal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Add New Nurse</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{url_for('views.create_nurse')}}" method="POST">
-                                <div class="form-group">
-                                    <label>Email:</label>
-                                    <input type="text" class="form-control" name="email" required="1">
-                                </div>
-                                <div class="form-group">
-                                    <label>Username:</label>
-                                    <input type="text" class="form-control" name="username" required="1">
-                                </div>
-                                <div class="form-group">
-                                    <label>Password:</label>
-                                    <input type="text" class="form-control" name="password" required="1">
-                                </div>
-                                <div class="form-group">
-                                    <label>Gender:</label>
-                                    <input type="text" class="form-control" name="gender" required="1">
-                                </div>
-                                <div class="form-group">
-                                    <label>Name:</label>
-                                    <input type="text" class="form-control" name="name" required="1">
-                                </div>
-                                <div class="form-group">
-                                    <label>Age:</label>
-                                    <input type="text" class="form-control" name="age" required="1">
-                                </div>
-                                <div class="form-group">
-                                    <label>Phone Number:</label>
-                                    <input type="text" class="form-control" name="phoneNumber" required="1">
-                                </div>
-                                <div class="form-group">
-                                    <label>Address:</label>
-                                    <input type="text" class="form-control" name="address" required="1">
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-primary" type="submit">Add Nurse</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">      
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
+                            {% endfor %}
+                        </table>
                     </div>
                 </div>
             </div>
-        <!-- Modal Add Nurse end-->
         </div>
     </div>
-</div>
-    {% endblock %}
+{% endblock %}
 {% endblock %}

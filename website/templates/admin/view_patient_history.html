@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block content %}
+    {% block body %}
+    <style>
+        .table{
+            box-shadow: 0 0 20px 5px rgba(206, 27, 0, 0.39) !important;
+        }
+        #addNewNurseBtn{
+            box-shadow: 0 0 15px 3px rgb(19 216 41 / 35%) !important;
+        }
+    </style>
+    <h1 align="center">View Patient History</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col md-12">
+                <div class="jumbotron p-3">
+
+                    <div style="padding-bottom:12px">
+                        <h2>Scheduled Appointments</h2>
+                    </div>
+
+                    <!-- Appointments Grid -->
+                    <div>
+                        <table class="table table-hover table-dark">
+                            <!-- Table headers -->
+                            <tr>
+                                <th>Appointment ID</th>
+                                <th>Nurse ID</th>
+                                <th>Appointment Time</th>
+                                <th>Nurse Comment</th>
+                                <th>Vaccine Type</th>
+                            </tr>
+
+                            <!-- Appointment Records -->
+                            {% for row in appointments %}
+                            <tr>
+                                <td>{{row.appointmentID}}</td>
+                                <td>{{row.nurseID}}</td>
+                                <td>{{row.appointment_time}}</td>
+                                <td>{{row.nurse_comment}}</td>
+                                <td>{{row.vaccine_type}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+
+                    <div style="padding-bottom:12px">
+                        <h2>Vaccination Records</h2>
+                    </div>
+
+                    <!-- Vaccination Grid -->
+                    <div>
+                        <table class="table table-hover table-dark">
+                            <!-- Table headers -->
+                            <tr>
+                                <th>Vaccination ID</th>
+                                <th>Nurse ID</th>
+                                <th>Vaccine ID</th>
+                                <th>Scheduled</th>
+                                <th>Completed</th>
+                            </tr>
+                            <!-- Vaccination Records -->
+                            {% for row in vaccinations %}
+                            <tr>
+                                <td>{{row.vaccinationID}}</td>
+                                <td>{{row.nurseID}}</td>
+                                <td>{{row.vaccineID}}</td>
+                                <td>{{row.scheduled_time}}</td>
+                                <td>{{row.completed}}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% endblock %}
