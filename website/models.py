@@ -62,7 +62,7 @@ class Appointment(db.Model, UserMixin):
     appointmentID = db.Column(db.Integer, primary_key=True)
     nurseID = db.Column(db.Integer)
     patientID = db.Column(db.Integer)
-    appointment_time = db.Column(db.DateTime())
+    appointment_time = db.Column(db.String(35))
     nurse_comment = db.Column(db.String(250))
     vaccine_type = db.Column(db.String(20))
 

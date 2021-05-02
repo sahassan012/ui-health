@@ -19,7 +19,7 @@
                         aspectRatio: 1.5,
                         allDaySlot: false,
                         slotMinTime: "08:00:00",
-                        slotMaxTime: "17:00:00",
+                        slotMaxTime: "21:00:00",
                         dayMaxEventRows: true,
                         views: { timeGrid: {
                             dayMaxEventRows: 6
@@ -28,7 +28,6 @@
                             var eventInfo = info.event.start;
                             var parEl = document.getElementById("eventDateTime");
                             document.getElementById("appt_dateandtime").value = info.event.startStr;
-
                             parEl.innerHTML = eventInfo;
                             eventObject = info.event;
                             $("#addEvent").modal();
@@ -53,7 +52,7 @@
             eventObject.remove();
             calendar.addEvent({title: "Your Appointment", start: sameStart, allDay: false, editable: false});
             $("#addEvent").modal('hide');
-            $("#deleteAppt").disabled = false;
+            $("#deleteAppt").disabled = true;
         }
     </script>
     <div style="margin-left: 179px; margin-top: -1184px;">

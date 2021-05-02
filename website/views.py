@@ -38,7 +38,6 @@ def create_nurse():
         age = request.form['age']
         phoneNumber = request.form['phoneNumber']
         address = request.form['address']
-
         nurse_username = Nurse.query.filter_by(username=username).first()
         nurse_email = Nurse.query.filter_by(username=email).first()
         if nurse_username:
@@ -155,7 +154,7 @@ def view_all_nurse_schedules():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_admin:
         return render_template("/errors/403.html", user=current_user)
     schedules = NurseSchedule.query.all()
-    timeslots = convert_timeslots_to_dictionary(NurseScheduleTracker.query.all())
+    timeslots = convert_timeslots_to_dictionary(AllNursesScheduleTracker.query.all())
     return render_template("/admin/view_all_nurse_schedules.html", user=current_user, nurse_schedules=schedules,
                            timeslots=timeslots)
 
@@ -218,21 +217,28 @@ def create_appointment():
     if request.method == 'POST':
         appointment_time = request.form['appt_dateandtime']
         vaccine_type = request.form.get('vaccineType')
-        appointment_time = datetime.strptime(appointment_time, "%Y-%m-%dT%H:%M:00-05:00")
-
+        if isinstance(appointment_time, str):
+            appointment_time = datetime.strptime(appointment_time, "%Y-%m-%dT%H:%M:00-05:00")
+        appointment_time = appointment_time.strftime("%Y-%m-%d %H:%M")
         appointment_exists = Appointment.query.filter_by(patientID=current_user.id).first()
-        new_appt = Appointment.query.filter_by(appointment_time=appointment_time).first()
+        nurseID = get_nurse_id_by_availability(appointment_time)
+        vaccine_type_count = get_vaccine_count_by_name(vaccine_type)
         if appointment_exists:
             flash('You can only schedule one appointment at a time. Please cancel existing appointment to reschedule.',
                   category='error')
-        elif new_appt:
-            flash('Appointment already scheduled. Please select another time.', category='error')
+        elif vaccine_type_count == 0:
+            flash('Vaccine for ' + vaccine_type + ' is currently unavailable.', category='error')
+        elif nurseID == -1:
+            flash('Appointment unavailable. Please select another time.', category='error')
         else:
-            new_appt = Appointment(appointment_time=appointment_time, patientID=current_user.id,
+            new_appt = Appointment(appointment_time=appointment_time, nurseID=nurseID, patientID=current_user.id,
                                    vaccine_type=vaccine_type)
+            nurse = Nurse.query.filter_by(employeeID=nurseID).first()
+            success_message = 'Appointment created with ' + str(nurse.name) + ' at ' + str(appointment_time) + '!'
+            decrease_vaccine_count(vaccine_type)
             db.session.add(new_appt)
             db.session.commit()
-            flash('Appointment created!', category='success')
+            flash(success_message, category='success')
     return redirect(url_for('views.schedule_appointment'))
 
 
@@ -241,6 +247,7 @@ def delete_appointment():
     if request.method == 'GET':
         data = Appointment.query.filter_by(patientID=current_user.id).first()
         if data:
+            increase_vaccine_count(data.vaccine_type)
             db.session.delete(data)
             db.session.commit()
             flash("Appointment Cancelled Successfully", category='success')
@@ -260,12 +267,7 @@ def schedule_appointment():
     max_end_appointment_date = min_end_appointment_date + timedelta(days=14)
     start_date = datetime(min_end_appointment_date.year, min_end_appointment_date.month, min_end_appointment_date.day)
     end_date = datetime(max_end_appointment_date.year, max_end_appointment_date.month, max_end_appointment_date.day)
-    for _date in daterange(start_date, end_date):
-        for _time in range(start_time, end_time):
-            cur_date = _date + timedelta(hours=_time)
-            if cur_date not in events.keys():
-                event = {'available': "Schedule Appointment", 'color': "green"}
-                events[cur_date] = event
+    events = fetch_calendar_events_based_on_availability(events, start_date, end_date, start_time, end_time)
     return render_template("patient/schedule_appointment.html", user=current_user, events=events)
 
 
@@ -291,7 +293,7 @@ def create_nurse_schedule():
         end_time = str_to_datetime(end_time_str)
         nurse_schedule_lst = NurseSchedule.query.filter_by(nurseID=current_user.id)
         if check_schedules_for_conflict(nurse_schedule_lst, start_time, end_time):
-            if add_schedule_count(start_time, end_time):
+            if add_count_to_schedule_tracker(start_time, end_time, nurseID=current_user.id):
                 new_schedule = NurseSchedule(nurseID=current_user.id, start_time=start_time, end_time=end_time)
                 db.session.add(new_schedule)
                 db.session.commit()
