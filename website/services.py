@@ -297,3 +297,29 @@ def increase_vaccine_count(vaccine_type):
     data.num_doses += 1
     data.num_on_hold -= 1
     db.session.commit()
+
+
+def can_schedule_appointment(patientID):
+    """
+    Return list [boolean, str] of two elements:
+        1. Whether patient can schedule an appointment
+        2. Name of vaccine type
+
+    [True, vaccineType] denotes that the patient has had one dose of either Pfizer or Moderna and
+    can schedule an appointment for their second vaccination shot.
+    [False, ''] or [False, 'johnson'] means that the patient is fully vaccinated.
+    """
+    vaccinations = VaccinationRecord.query.filter_by(patientID=patientID).all()
+    vaccination_count = len(vaccinations)
+    if vaccination_count == 0:
+        return [True, '']
+    elif vaccination_count == 1:
+        vaccineID = vaccinations[0].vaccineID
+        vaccine = Vaccine.query.filter_by(vaccineID=vaccineID).first()
+        vaccineName = vaccine.name
+        if vaccineName == 'pfizer' or vaccineName == 'moderna':
+            return [True, vaccineName]
+        else:
+            return [False, vaccineName]
+    else:
+        return [False, '']

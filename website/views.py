@@ -268,7 +268,9 @@ def schedule_appointment():
     start_date = datetime(min_end_appointment_date.year, min_end_appointment_date.month, min_end_appointment_date.day)
     end_date = datetime(max_end_appointment_date.year, max_end_appointment_date.month, max_end_appointment_date.day)
     events = fetch_calendar_events_based_on_availability(events, start_date, end_date, start_time, end_time)
-    return render_template("patient/schedule_appointment.html", user=current_user, events=events)
+    result = can_schedule_appointment(current_user.id)
+    return render_template("patient/schedule_appointment.html", user=current_user, events=events,
+                           can_schedule_appointment=result[0], vaccine_type=result[1])
 
 
 @views.route('/view-nurse-schedule')
@@ -340,4 +342,5 @@ def view_patient_history(id):
         return render_template("/errors/403.html", user=current_user)
     appointments = Appointment.query.filter_by(patientID=id).all()
     vaccinations = VaccinationRecord.query.filter_by(patientID=id).all()
-    return render_template("admin/view_patient_history.html", user=current_user, appointments=appointments, vaccinations=vaccinations)
+    return render_template("admin/view_patient_history.html", user=current_user, appointments=appointments,
+                           vaccinations=vaccinations)

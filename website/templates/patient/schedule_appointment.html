@@ -1,6 +1,12 @@
 {% extends "base.html" %} {% block title %}Home{% endblock %}
 {% block content %}
+
 <h1 align="center">Select an Available Date</h1>
+    {% if not can_schedule_appointment %}
+    <div class="alert alert-info" role="alert">
+        You have been fully vaccinated! Click <a style="color:#ce4409; font-weight: bold" href="/view-vaccination-history">here</a> to see your Vaccine History.
+    </div>
+    {% endif %}
 <!-- Calendar -->
 <div id="calendar"></div>
     <script>
@@ -34,6 +40,7 @@
                         },
                         events: [
                             {% for datetime, val in events.items()  %}
+                                {% if can_schedule_appointment %}
                                 {
                                     title: '{{ val['available'] }}',
                                     start: '{{ datetime }}',
@@ -41,6 +48,15 @@
                                     editable: false,
                                     color: '{{ val['color'] }}'
                                 },
+                                {% else %}
+                                {
+                                    title: 'Not available',
+                                    start: '{{ datetime }}',
+                                    allDay: false,
+                                    editable: false,
+                                    color: '{{ 'red' }}'
+                                },
+                                {% endif %}
                             {% endfor %}
                         ]
                     }
@@ -58,6 +74,8 @@
     <div style="margin-left: 179px; margin-top: -1184px;">
         <a id="deleteAppt" href="{{ url_for('views.delete_appointment') }}" onclick="return confirm('Are you sure you want to delete current appointment?')" class="btn btn-primary" type="button" disabled>Cancel current appointment</a>
     </div>
+
+    {% if can_schedule_appointment %}
     <!-- Modal: confirm schedule appointment -->
     <div class="modal" id="addEvent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true" data-backdrop="false">
@@ -83,11 +101,21 @@
             <div class="modal-footer justify-content-center">
                 <form action="{{url_for('views.create_appointment')}}" method="POST">
                     <label for="vaccinetype">Vaccine Type:</label>
-                    <select name="vaccineType" id="vaccineType" style="margin-left:5px; width:100px">
-                        <option value="moderna">Moderna</option>
-                        <option value="pfizer">Pfizer</option>
-                        <option value="johnson&johnson">Johnson & Johnson</option>
-                    </select>
+                    {% if vaccine_type == '' %}
+                        <select name="vaccineType" id="vaccineType" style="margin-left:5px; width:100px">
+                            <option value="moderna">Moderna</option>
+                            <option value="pfizer">Pfizer</option>
+                            <option value="johnson&johnson">Johnson & Johnson</option>
+                        </select>
+                    {% elif vaccine_type == 'moderna' %}
+                        <select name="vaccineType" id="vaccineType" style="margin-left:5px; width:100px">
+                            <option value="moderna">Moderna</option>
+                        </select>
+                    {% elif vaccine_type == 'pfizer' %}
+                         <select name="vaccineType" id="vaccineType" style="margin-left:5px; width:100px">
+                            <option value="pfizer">Pfizer</option>
+                        </select>
+                    {% endif %}
                     <input id="appt_dateandtime" type="hidden" class="form-control" name="appt_dateandtime" value="">
                     <button onclick="addCalenderAppt()" class="btn btn-primary" type="submit">Confirm</button>
                 </form>
@@ -98,6 +126,7 @@
         </div>
     </div>
     <!-- Modal: confirm schedule appointment -->
+    {% endif %}
 <style>
     .btn-primary {
     color: #fff;
