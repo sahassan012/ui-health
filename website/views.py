@@ -280,6 +280,13 @@ def view_nurse_schedule():
     schedule = NurseSchedule.query.filter_by(nurseID=current_user.id).all()
     return render_template("/nurse/view_nurse_schedule.html", user=current_user, schedule=schedule)
 
+@views.route('/view_vaccine_appointments')
+def view_vaccine_appointments():
+    if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_nurse:
+        return render_template("/errors/403.html", user=current_user)
+    appointments = Appointment.query.filter_by(nurseID=current_user.id).all()
+    return render_template("/nurse/view_vaccine_appointments.html", user=current_user, appointments=appointments)
+
 
 @views.route('/create-nurse-schedule', methods=['POST'])
 def create_nurse_schedule():
