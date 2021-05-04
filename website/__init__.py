@@ -1,3 +1,4 @@
+import click
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
@@ -36,7 +37,8 @@ def start_app():
 
 
 def create_database(app):
-    if not path.exists('website/' + DB_NAME) and not path.exists(os.path.dirname(os.path.abspath(__file__)) + "\\" + DB_NAME):
+    if not path.exists('website/' + DB_NAME) and not path.exists(
+            os.path.dirname(os.path.abspath(__file__)) + "\\" + DB_NAME):
         db.create_all(app=app)
         print('Created Database!')
 
@@ -48,3 +50,23 @@ def scheduled():
     print("Removing inactive schedules...")
     remove_inactive_schedules()
     print("Done!")
+
+
+@app.cli.command()
+@click.option('--records')
+def create_patients_data(records):
+    num_new_data = 10
+    if records is not None:
+        num_new_data = int(records)
+    from website.test.insert_test_data import insert_dummy_patient_data
+    insert_dummy_patient_data(num_new_data)
+
+
+@app.cli.command()
+@click.option('--records')
+def create_nurses_data(records):
+    num_new_data = 10
+    if records is not None:
+        num_new_data = int(records)
+    from website.test.insert_test_data import insert_dummy_nurse_data
+    insert_dummy_nurse_data(num_new_data)
