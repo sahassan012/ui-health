@@ -33,7 +33,7 @@ def create_nurse():
         email = request.form['email']
         username = request.form['username']
         password = request.form['password']
-        gender = request.form['gender']
+        sex = request.form['sex']
         name = request.form['name']
         age = request.form['age']
         phoneNumber = request.form['phoneNumber']
@@ -49,7 +49,7 @@ def create_nurse():
             if user is None:
                 flash('Something went wrong!', category='error')
             else:
-                new_nurse = Nurse(employeeID=user.id, email=email, username=username, gender=gender, name=name, age=age,
+                new_nurse = Nurse(employeeID=user.id, email=email, username=username, sex=sex, name=name, age=age,
                                   phoneNumber=phoneNumber, address=address)
                 db.session.add(new_nurse)
                 db.session.commit()
@@ -63,7 +63,7 @@ def update_nurse():
         data = Nurse.query.get(request.form.get('employeeID'))
         data.email = request.form['email']
         data.username = request.form['username']
-        data.gender = request.form['gender']
+        data.sex = request.form['sex']
         data.name = request.form['name']
         data.age = request.form['age']
         data.phoneNumber = request.form['phoneNumber']
@@ -130,7 +130,7 @@ def update_account_info():
             data.last_name = request.form['lastName']
             data.SSN = request.form['ssn']
             data.age = request.form['age']
-            data.gender = request.form['gender']
+            data.sex = request.form['sex']
             data.race = request.form['race']
             data.occupation_class = request.form['occupationClass']
             data.medical_history_description = request.form['medicalHistoryDescription']

@@ -44,8 +44,8 @@ def create_database(app):
 
 
 @app.cli.command()
-def scheduled():
-    """Run Scheduled Job."""
+def delete_day_old_schedules():
+    """Remove all nurse schedules > 1 day old."""
     from .services import remove_inactive_schedules
     print("Removing inactive schedules...")
     remove_inactive_schedules()
@@ -55,18 +55,28 @@ def scheduled():
 @app.cli.command()
 @click.option('--records')
 def create_patients_data(records):
+    """Insert patients test data into database.
+         'flask create-patients-data --records <# of records>'
+       To insert 10 records, use:
+         'flask create-patients-data'
+    """
     num_new_data = 10
     if records is not None:
         num_new_data = int(records)
-    from website.test.insert_test_data import insert_dummy_patient_data
-    insert_dummy_patient_data(num_new_data)
+    from website.test.insert_test_data import insert_patient_test_data
+    insert_patient_test_data(num_new_data)
 
 
 @app.cli.command()
 @click.option('--records')
 def create_nurses_data(records):
+    """Insert nurses test data into database.
+         'flask create-nurses-data --records <# of records>'
+       To insert 10 records, use:
+         'flask create-nurses-data'
+    """
     num_new_data = 10
     if records is not None:
         num_new_data = int(records)
-    from website.test.insert_test_data import insert_dummy_nurse_data
-    insert_dummy_nurse_data(num_new_data)
+    from website.test.insert_test_data import insert_nurse_test_data
+    insert_nurse_test_data(num_new_data)

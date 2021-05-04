@@ -18,7 +18,7 @@ email_domains = ['gmail.com', 'yahoo.com', 'sbcglobal.net', 'aol.com', 'msn.com'
                  'outlook.com']
 
 
-def insert_dummy_patient_data(add_patient_count):
+def insert_patient_test_data(add_patient_count):
     for i in range(0, add_patient_count):
         first_name, last_name = fake_data.name().split(' ', 1)
         mi_name = fake_data.name().split(' ', 1)[0]
@@ -44,13 +44,13 @@ def insert_dummy_patient_data(add_patient_count):
         db.session.add(user)
         db.session.commit()
         patient = Patient(patientID=user.id, username=username, first_name=first_name, mi_name=mi_name, last_name=last_name, SSN=ssn,
-                          age=age, gender=sex, race=race, occupation_class=occupation_class, medical_history_description=medical_history, phone_number=phone_number,
+                          age=age, sex=sex, race=race, occupation_class=occupation_class, medical_history_description=medical_history, phone_number=phone_number,
                           address=address)
         db.session.add(patient)
         db.session.commit()
 
 
-def insert_dummy_nurse_data(add_nurse_count):
+def insert_nurse_test_data(add_nurse_count):
     for i in range(0, add_nurse_count):
         first_name, last_name = fake_data.name().split(' ', 1)
         last_name = last_name.replace(' ', '')
@@ -70,7 +70,7 @@ def insert_dummy_nurse_data(add_nurse_count):
                         is_admin=False, is_patient=False, is_nurse=True)
         db.session.add(user)
         db.session.commit()
-        nurse = Nurse(employeeID=user.id, email=email, username=username, gender=sex,name=first_name, age=age,
+        nurse = Nurse(employeeID=user.id, email=email, username=username, sex=sex,name=first_name, age=age,
                        phoneNumber=phone_number, address=address)
         db.session.add(nurse)
         db.session.commit()

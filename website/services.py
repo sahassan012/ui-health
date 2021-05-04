@@ -173,7 +173,7 @@ def delete_user(id):
     flash("User Deleted Successfully")
 
 
-def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age, gender, race, occupation_class,
+def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age, sex, race, occupation_class,
                    medical_history_description, phone_number, address):
     """
     Create patient using the fields given
@@ -181,7 +181,7 @@ def create_patient(patientID, username, first_name, mi_name, last_name, SSN, age
     """
     new_patient = Patient(patientID=patientID, username=username, first_name=first_name, mi_name=mi_name,
                           last_name=last_name,
-                          SSN=SSN, age=age, gender=gender, race=race, occupation_class=occupation_class,
+                          SSN=SSN, age=age, sex=sex, race=race, occupation_class=occupation_class,
                           medical_history_description=medical_history_description, phone_number=phone_number,
                           address=address)
     db.session.add(new_patient)

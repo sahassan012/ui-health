@@ -93,7 +93,7 @@ def sign_up():
         last_name = request.form.get('lastName')
         SSN = request.form.get('ssn')
         age = request.form.get('age')
-        gender = request.form.get('gender')
+        sex = request.form.get('sex')
         race = request.form.get('race')
         occupation_class = request.form.get('occupationClass')
         medical_history_description = request.form.get('medicalHistoryDescription')
@@ -124,7 +124,7 @@ def sign_up():
             flash('Password must be at least 7 characters.', category='error')
         else:
             new_user = create_user(email, first_name, password1, False, True, False)
-            create_patient(new_user.id, username, first_name, mi_name, last_name, SSN, age, gender, race,
+            create_patient(new_user.id, username, first_name, mi_name, last_name, SSN, age, sex, race,
                            occupation_class, medical_history_description, phone_number, address)
             login_user(new_user, remember=True)
             return redirect(url_for('views.home'))
