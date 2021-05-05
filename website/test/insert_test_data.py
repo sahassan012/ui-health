@@ -3,8 +3,8 @@ import random
 from faker import Faker
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
-
-from website.models import User, Nurse, Patient, NurseSchedule, AllNursesScheduleTracker, NurseScheduleTracker
+from website.models import User, Nurse, Patient, NurseSchedule, AllNursesScheduleTracker, NurseScheduleTracker, \
+    Appointment, Vaccine
 from website import db
 
 fake_data = Faker()
@@ -20,6 +20,7 @@ occupation_classes = ['Class 5A', 'Class 4P', 'Class 4A', 'Class 3P Surgeon', 'C
 medical_history_types = ['None', 'Pregnant', 'Heart Disease', 'Diabetic', 'Lung cancer', 'Dementia', 'Shrimp Allergy']
 email_domains = ['gmail.com', 'yahoo.com', 'sbcglobal.net', 'aol.com', 'msn.com', 'comcast.net', 'mail.ru',
                  'outlook.com']
+vaccine_types = ['moderna', 'pfizer', 'johnson']
 
 
 def insert_admin_login_data():
@@ -35,7 +36,7 @@ def insert_patient_test_data(add_patient_count):
         mi_name = fake_data.name().split(' ', 1)[0]
         last_name = last_name.replace(' ', '')
         first_intial = first_name[0]
-        username = (first_intial + last_name.replace('\'', '') + str(random.randrange(0, 100, 1))).lower()
+        username = (first_intial + last_name.replace('\'', '') + str(random.randrange(0, 500, 1))).lower()
         email = username + '@' + random.choice(email_domains)
         ssn = int(fake_data.ssn().replace('-', ''))
         age = random.randrange(0, 100, 1)
@@ -68,7 +69,7 @@ def insert_nurse_test_data(add_nurse_count):
         first_name, last_name = fake_data.name().split(' ', 1)
         last_name = last_name.replace(' ', '')
         first_intial = first_name[0]
-        username = (first_intial + last_name.replace('\'', '') + str(random.randrange(0, 100, 1))).lower()
+        username = (first_intial + last_name.replace('\'', '') + str(random.randrange(0, 999, 1))).lower()
         email = username + '@uih.com'
         age = random.randrange(20, 55, 1)
         sex = random.choice(sexes)
@@ -107,12 +108,53 @@ def insert_schedules_for_existing_nurses():
             schedule = NurseSchedule(nurseID=nurses[i].employeeID, start_time=start_time, end_time=end_time)
             db.session.add(schedule)
             add_to_schedule_tracker(start_time=start_time, end_time=end_time, nurseID=nurses[i].employeeID)
+            db.session.commit()
             i += 1
             if i >= num_nurses:
                 return
-            db.session.commit()
         max_nurses_per_timeslot += 12
         start_date += timedelta(hours=9)
+
+
+def insert_appointments_for_existing_patients():
+    start_date = datetime.now() + timedelta(hours=1)
+    end_date = start_date + timedelta(days=6)
+    patients = Patient.query.all()
+    nurses = Nurse.query.all()
+    max_appointments_per_timeslot = 10
+    num_patients = len(patients)
+    num_nurses = len(nurses)
+    n_index = 0
+    p_index = 0
+    i = 0
+    while start_date <= end_date:
+        while i < max_appointments_per_timeslot:
+            appointment_time = start_date.strftime("%Y-%m-%d %H:00")
+            appt = Appointment(appointment_time=appointment_time, nurseID=nurses[n_index].employeeID,
+                               patientID=patients[i].patientID,
+                               vaccine_type=random.choice(vaccine_types))
+            db.session.add(appt)
+            db.session.commit()
+            i += 1
+            if n_index >= num_nurses or i >= num_patients:
+                return
+        max_appointments_per_timeslot += 10
+        p_index += 10
+        n_index += 1
+        start_date += timedelta(hours=1)
+
+
+def insert_vaccines():
+    moderna_vaccine = Vaccine(name='moderna', company_name='moderna', num_doses=500, description='',
+                          num_on_hold=0, num_doses_required=2)
+    pfizer_vaccine = Vaccine(name='pfizer', company_name='pfizer', num_doses=500, description='',
+                          num_on_hold=0, num_doses_required=2)
+    johnson_vaccine = Vaccine(name='johnson', company_name='johnson', num_doses=500, description='',
+                          num_on_hold=0, num_doses_required=2)
+    db.session.add(moderna_vaccine)
+    db.session.add(pfizer_vaccine)
+    db.session.add(johnson_vaccine)
+    db.session.commit()
 
 
 def add_to_schedule_tracker(start_time, end_time, nurseID):
