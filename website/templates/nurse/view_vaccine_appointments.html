@@ -8,11 +8,70 @@
         #addNewNurseBtn{
             box-shadow: 0 0 15px 3px rgb(19 216 41 / 35%) !important;
         }
+        #date{
+            border: 1px solid black;
+            border-radius: 5px;
+            height: 30px;
+            width: 20%;
+            font-size: 1.2em;
+            font-family: Arial;
+            padding-left: 5px;
+        }
+        #text{
+            font-size: 1.5em;
+            font-family: Arial;
+            font-weight: bold;
+        }
+        #submit{
+            border-radius: 5px;
+            background-color: rgb(238, 111, 37); 
+            font-weight: bold;
+            margin-left: 0.3em;
+            width: 8%;
+            height: 30px;
+            font-family: Arial;
+            color:rgb(255, 255, 255);
+        }
+        #submit:hover{
+            background-color: rgb(204, 76, 2);
+        }
     </style>
     <h1 align="center">Vaccination Appointments</h1>
     <div class="container">
-        
-        
+        <form href="/view-vaccine-appointments">
+            <label for="dateTitle" id="text">Selected Date</label>
+            <div class="dateSelection">
+                <input type="date" name="date" id="date" required>
+                <button id="submit">Submit</button>
+                <!-- "alert(document.getElementById('date').value)" -->
+            </div>
+        </form>
+        <!-- Display My Appointments -->
+        <div id="mylist" style="padding-top:30px">
+            <table class="table table-hover table-dark">
+                <!-- Table headers -->
+                <tr>
+                    <th>Patient ID</th>
+                    <th>Vaccine Type</th>
+                    <th>Comments</th>
+                    <th>Status</th>
+                </tr>
+
+                <!-- Records -->
+                {% for row in appointments %}
+                <tr>
+                    <td>{{row.patientID}}</td>
+                    <td>{{row.vaccine_type}}</td>
+                    <td>{{row.nurse_comment}}</td>
+                    <td style="width: 155px">
+                        <div style="display: flex">
+                            <a style="margin-right: 10px; background-color: forestgreen; border:none;" class="btn btn-primary btn-xs" >Done</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 </div>
     {% endblock %}
