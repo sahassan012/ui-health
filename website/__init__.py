@@ -110,6 +110,7 @@ def create_full_profile_database():
                                                 insert_schedules_for_existing_nurses, insert_admin_login_data, \
                                                   insert_appointments_for_existing_patients, insert_vaccines
     print('Admin account is being created...')
+    time.sleep(2)
     insert_admin_login_data()
     print('Patients are signing up...')
     insert_patient_test_data(100)
@@ -118,6 +119,7 @@ def create_full_profile_database():
     insert_patient_test_data(100)
     insert_patient_test_data(100)
     print('Vaccine inventory is being updated...')
+    time.sleep(2)
     insert_vaccines()
     print('Nurses are being registered...')
     insert_nurse_test_data(100)
@@ -127,5 +129,5 @@ def create_full_profile_database():
     insert_nurse_test_data(100)
     print('Nurses are getting scheduled to work...')
     insert_schedules_for_existing_nurses()
-    print('Patients are making appointments with available nurses...')
+    print('Patients are making vaccination appointments...')
     insert_appointments_for_existing_patients()

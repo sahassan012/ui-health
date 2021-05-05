@@ -257,7 +257,7 @@ def fetch_calendar_events_based_on_availability(events, start_date, end_date, st
                         event = {'available': "Schedule Appointment", 'color': "green"}
                         events[cur_date] = event
                         timeslot_nurseID = list(filter(lambda x: x[0] != timeslot, timeslot_nurseID))
-                        break;
+                        break
                 elif (cur_date not in events.keys()) \
                         or (cur_date in events.keys() and events[cur_date]['color'] != '#ce4409'):
                     if num_appointments >= 10:

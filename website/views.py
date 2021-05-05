@@ -280,6 +280,7 @@ def view_nurse_schedule():
     schedule = NurseSchedule.query.filter_by(nurseID=current_user.id).all()
     return render_template("/nurse/view_nurse_schedule.html", user=current_user, schedule=schedule)
 
+
 @views.route('/view_vaccine_appointments')
 def view_vaccine_appointments():
     if current_user.is_anonymous or not current_user.is_authenticated or not current_user.is_nurse:
