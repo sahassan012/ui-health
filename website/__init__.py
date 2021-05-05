@@ -1,9 +1,13 @@
 import click
+import sqlalchemy
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
 import os
+import time
+
+from sqlalchemy.exc import InvalidRequestError
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
@@ -80,3 +84,34 @@ def create_nurses_data(records):
         num_new_data = int(records)
     from website.test.insert_test_data import insert_nurse_test_data
     insert_nurse_test_data(num_new_data)
+
+
+@app.cli.command()
+def insert_nurse_schedules():
+    """Insert nurses schedules test data into database.
+         'flask insert-nurse-schedules'
+    """
+    from website.test.insert_test_data import insert_schedules_for_existing_nurses
+    insert_schedules_for_existing_nurses()
+
+
+@app.cli.command()
+def create_full_profile_database():
+    from website.test.insert_test_data import insert_patient_test_data, insert_nurse_test_data, \
+                                                insert_schedules_for_existing_nurses, insert_admin_login_data
+    print('Creating Admin account...')
+    insert_admin_login_data()
+    print('Inserting 500 patients...')
+    insert_patient_test_data(100)
+    insert_patient_test_data(100)
+    insert_patient_test_data(100)
+    insert_patient_test_data(100)
+    insert_patient_test_data(100)
+    print('Inserting 500 nurses...')
+    insert_nurse_test_data(100)
+    insert_nurse_test_data(100)
+    insert_nurse_test_data(100)
+    insert_nurse_test_data(100)
+    insert_nurse_test_data(100)
+    print('Scheduling nurses...')
+    insert_schedules_for_existing_nurses()

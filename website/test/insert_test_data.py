@@ -1,12 +1,16 @@
+from datetime import datetime, timedelta
 import random
 from faker import Faker
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
 
-from website.models import User, Nurse, Patient
+from website.models import User, Nurse, Patient, NurseSchedule, AllNursesScheduleTracker, NurseScheduleTracker
 from website import db
 
 fake_data = Faker()
+now = datetime.now()
+now_str = str(now.hour) + str(now.second) + str(now.microsecond)
+Faker.seed(int(now_str))
 
 sexes = ['Male', 'Female']
 races = ['American Indian or Alaska Native', 'Asian', 'Black or African American', 'Hispanic or Latino',
@@ -16,6 +20,13 @@ occupation_classes = ['Class 5A', 'Class 4P', 'Class 4A', 'Class 3P Surgeon', 'C
 medical_history_types = ['None', 'Pregnant', 'Heart Disease', 'Diabetic', 'Lung cancer', 'Dementia', 'Shrimp Allergy']
 email_domains = ['gmail.com', 'yahoo.com', 'sbcglobal.net', 'aol.com', 'msn.com', 'comcast.net', 'mail.ru',
                  'outlook.com']
+
+
+def insert_admin_login_data():
+    new_user = User(email='admin', first_name='Admin',
+                    password=generate_password_hash('password', method='sha256'), is_admin=True)
+    db.session.add(new_user)
+    db.session.commit()
 
 
 def insert_patient_test_data(add_patient_count):
@@ -40,11 +51,13 @@ def insert_patient_test_data(add_patient_count):
                            .replace('+', '')[:10]
         address = fake_data.address().replace('\n', ' ')
         user = User(email=email, first_name=first_name, password=generate_password_hash('password', method='sha256'),
-                        is_admin=False, is_patient=True, is_nurse=False)
+                    is_admin=False, is_patient=True, is_nurse=False)
         db.session.add(user)
         db.session.commit()
-        patient = Patient(patientID=user.id, username=username, first_name=first_name, mi_name=mi_name, last_name=last_name, SSN=ssn,
-                          age=age, sex=sex, race=race, occupation_class=occupation_class, medical_history_description=medical_history, phone_number=phone_number,
+        patient = Patient(patientID=user.id, username=username, first_name=first_name, mi_name=mi_name,
+                          last_name=last_name, SSN=ssn,
+                          age=age, sex=sex, race=race, occupation_class=occupation_class,
+                          medical_history_description=medical_history, phone_number=phone_number,
                           address=address)
         db.session.add(patient)
         db.session.commit()
@@ -67,11 +80,55 @@ def insert_nurse_test_data(add_nurse_count):
                            .replace('+', '')[:10]
         address = fake_data.address().replace('\n', ' ')
         user = User(email=email, first_name=first_name, password=generate_password_hash('password', method='sha256'),
-                        is_admin=False, is_patient=False, is_nurse=True)
+                    is_admin=False, is_patient=False, is_nurse=True)
         db.session.add(user)
         db.session.commit()
-        nurse = Nurse(employeeID=user.id, email=email, username=username, sex=sex,name=first_name, age=age,
-                       phoneNumber=phone_number, address=address)
+        nurse = Nurse(employeeID=user.id, email=email, username=username, sex=sex, name=first_name, age=age,
+                      phoneNumber=phone_number, address=address)
         db.session.add(nurse)
         db.session.commit()
 
+
+def insert_schedules_for_existing_nurses():
+    """
+    Schedule existing nurses for every timeslot starting from two hours from current datetime to 14 days from now.
+    """
+    start_date = datetime.now() + timedelta(hours=1)
+    end_date = start_date + timedelta(days=6)
+    nurses = Nurse.query.all()
+    num_nurses = len(nurses)
+    max_nurses_per_timeslot = 12
+    i = 0
+    while start_date <= end_date:
+        date_timeslot_str = str(start_date)[:14] + '00'
+        start_time = datetime.strptime(date_timeslot_str, "%Y-%m-%d %H:00")
+        end_time = start_time + timedelta(hours=8)
+        while i < max_nurses_per_timeslot:
+            schedule = NurseSchedule(nurseID=nurses[i].employeeID, start_time=start_time, end_time=end_time)
+            db.session.add(schedule)
+            add_to_schedule_tracker(start_time=start_time, end_time=end_time, nurseID=nurses[i].employeeID)
+            i += 1
+            if i >= num_nurses:
+                return
+            db.session.commit()
+        max_nurses_per_timeslot += 12
+        start_date += timedelta(hours=9)
+
+
+def add_to_schedule_tracker(start_time, end_time, nurseID):
+    time_slots = []
+    while start_time <= end_time:
+        start_datetime_str = start_time.strftime("%Y-%m-%d %H:00")
+        time_slot = AllNursesScheduleTracker.query.filter_by(timestamp=start_datetime_str).first()
+        if time_slot:
+            time_slots.append(time_slot)
+        else:
+            new_time_slot = AllNursesScheduleTracker(timestamp=start_datetime_str, count=0)
+            db.session.add(new_time_slot)
+            time_slots.append(new_time_slot)
+        individual_time_slot = NurseScheduleTracker(nurseID=nurseID, timestamp=start_datetime_str)
+        db.session.add(individual_time_slot)
+        start_time += timedelta(hours=1)
+    for time_slot in time_slots:
+        time_slot.count += 1
+    db.session.commit()
