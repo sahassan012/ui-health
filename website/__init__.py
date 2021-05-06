@@ -119,33 +119,77 @@ def create_full_profile_database():
          'flask create-full-profile-database'
     """
     from website.test.insert_test_data import insert_patient_test_data, insert_nurse_test_data, \
-                                                insert_schedules_for_existing_nurses, insert_admin_login_data, \
-                                                  insert_appointments_for_existing_patients, insert_vaccines, \
-                                                    erase_database, insert_vaccination_records_for_existing_patients
-    print('Deleting all data in DB...')
+        insert_schedules_for_existing_nurses, insert_admin_login_data, \
+        insert_appointments_for_existing_patients, insert_vaccines, \
+        erase_database, insert_vaccination_records_for_existing_patients
+    import os
+    clear = lambda: os.system('cls')
+    clear()
+    print("Creating test data for UI-Health Database...\n")
+
     erase_database()
-    print('Admin account is being created...')
-    time.sleep(2)
+    time.sleep(1.0)
+    printProgressBar(0, 100, prefix='Progress:', suffix='Deleting current database data...     ', length=30)
+
     insert_admin_login_data()
-    print('Patients are signing up...')
+    printProgressBar(1, 100, prefix='Progress:', suffix='Admin account is being created...     ', length=30)
+
     insert_patient_test_data(100)
+    printProgressBar(8, 100, prefix='Progress:', suffix='Patients are signing up...         ', length=30)
     insert_patient_test_data(100)
+    printProgressBar(16, 100, prefix='Progress:', suffix='Patients are signing up...         ', length=30)
     insert_patient_test_data(100)
+    printProgressBar(24, 100, prefix='Progress:', suffix='Patients are signing up...         ', length=30)
     insert_patient_test_data(100)
+    printProgressBar(32, 100, prefix='Progress:', suffix='Patients are signing up...         ', length=30)
     insert_patient_test_data(100)
-    print('Vaccine inventory is being updated...')
-    time.sleep(2)
+    printProgressBar(40, 100, prefix='Progress:', suffix='Patients are signing up...         ', length=30)
+    time.sleep(1.00)
+
     insert_vaccines()
-    print('Nurses are being registered...')
+    printProgressBar(55, 100, prefix='Progress:', suffix='Vaccine inventory is being updated...     ', length=30)
+
     insert_nurse_test_data(100)
+    printProgressBar(60, 100, prefix='Progress:', suffix='Nurses are being registered...          ', length=30)
     insert_nurse_test_data(100)
+    printProgressBar(65, 100, prefix='Progress:', suffix='Nurses are being registered...          ', length=30)
     insert_nurse_test_data(100)
+    printProgressBar(70, 100, prefix='Progress:', suffix='Nurses are being registered...          ', length=30)
     insert_nurse_test_data(100)
+    printProgressBar(75, 100, prefix='Progress:', suffix='Nurses are being registered...          ', length=30)
     insert_nurse_test_data(100)
-    print('Nurses are getting scheduled...')
+    printProgressBar(80, 100, prefix='Progress:', suffix='Nurses are being registered...          ', length=30)
+
     insert_schedules_for_existing_nurses()
-    print('Storing patient vaccination records...')
+    printProgressBar(90, 100, prefix='Progress:', suffix='Nurses are getting scheduled...     ', length=30)
+
     insert_vaccination_records_for_existing_patients()
-    print('Patients are making appointments...')
+    printProgressBar(92, 100, prefix='Progress:', suffix='Storing patient vaccination records...     ', length=30)
+
     insert_appointments_for_existing_patients()
-    print('[Completed]')
+    printProgressBar(94, 100, prefix='Progress:', suffix='Patients are making appointments...     ', length=30)
+
+    printProgressBar(100, 100, prefix='Progress:', suffix='Complete                                        ', length=30)
+    print('\nUI-Health Database successfully created.')
+
+
+def printProgressBar(iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', printEnd="\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    source: https://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=printEnd)
+    if iteration == total:
+        print()

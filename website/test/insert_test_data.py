@@ -126,7 +126,7 @@ def insert_vaccination_records_for_existing_patients():
     n_index = 0
     p_index = 0
     i = 0
-    while start_date <= end_date:
+    while start_date < end_date:
         scheduled_time_str = start_date.strftime("%Y-%m-%d %H:00")
         scheduled_time = datetime.strptime(scheduled_time_str, "%Y-%m-%d %H:00")
         vaccination_record = VaccinationRecord(patientID=patients[i].patientID,
@@ -137,27 +137,26 @@ def insert_vaccination_records_for_existing_patients():
         db.session.add(vaccination_record)
         db.session.commit()
         i += 1
-        if n_index >= num_nurses or i >= num_patients:
-            return
         p_index += 1
         n_index += 1
-        start_date += timedelta(hours=2)
+        if n_index >= num_nurses or i >= num_patients:
+            return
+        start_date += timedelta(hours=1)
 
 
 def insert_appointments_for_existing_patients():
     start_date = datetime.now() + timedelta(hours=1)
-    end_date = start_date + timedelta(days=6)
+    end_date = start_date + timedelta(days=3)
     patients = Patient.query.all()
     nurses = Nurse.query.all()
-    max_appointments_per_timeslot = 10
+    max_appts = 100
     num_patients = len(patients)
     num_nurses = len(nurses)
     n_index = 0
     p_index = 0
-    i = 0
     while start_date <= end_date:
-        while i < max_appointments_per_timeslot:
-            patientID = patients[i].patientID
+        while p_index < max_appts:
+            patientID = patients[p_index].patientID
             vaccination_records = VaccinationRecord.query.filter_by(patientID=patientID).all()
             appointments = Appointment.query.filter_by(patientID=patientID).all()
             if not appointments:
@@ -186,13 +185,14 @@ def insert_appointments_for_existing_patients():
                     vaccine.num_on_hold += 1
                     db.session.add(appt)
                     db.session.commit()
-            i += 1
-            if n_index >= num_nurses or i >= num_patients:
+            p_index += 1
+            if p_index % 10 == 0:
+                n_index += 1
+            if n_index >= num_nurses or p_index >= num_patients:
                 return
-        max_appointments_per_timeslot += 10
-        p_index += 10
-        n_index += 1
+        max_appts += 100
         start_date += timedelta(hours=1)
+
 
 
 def insert_vaccines():
