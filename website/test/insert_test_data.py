@@ -4,7 +4,7 @@ from faker import Faker
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash
 from website.models import User, Nurse, Patient, NurseSchedule, AllNursesScheduleTracker, NurseScheduleTracker, \
-    Appointment, Vaccine
+    Appointment, Vaccine, VaccinationRecord
 from website import db
 
 fake_data = Faker()
@@ -116,6 +116,34 @@ def insert_schedules_for_existing_nurses():
         start_date += timedelta(hours=9)
 
 
+def insert_vaccination_records_for_existing_patients():
+    start_date = datetime.now() + timedelta(hours=1)
+    end_date = start_date + timedelta(days=6)
+    patients = Patient.query.all()
+    nurses = Nurse.query.all()
+    num_patients = len(patients)
+    num_nurses = len(nurses)
+    n_index = 0
+    p_index = 0
+    i = 0
+    while start_date <= end_date:
+        scheduled_time_str = start_date.strftime("%Y-%m-%d %H:00")
+        scheduled_time = datetime.strptime(scheduled_time_str, "%Y-%m-%d %H:00")
+        vaccination_record = VaccinationRecord(patientID=patients[i].patientID,
+                                               nurseID=nurses[n_index].employeeID,
+                                               vaccineID=random.randrange(1, 4, 1),
+                                               scheduled_time=scheduled_time,
+                                               completed=1)
+        db.session.add(vaccination_record)
+        db.session.commit()
+        i += 1
+        if n_index >= num_nurses or i >= num_patients:
+            return
+        p_index += 1
+        n_index += 1
+        start_date += timedelta(hours=2)
+
+
 def insert_appointments_for_existing_patients():
     start_date = datetime.now() + timedelta(hours=1)
     end_date = start_date + timedelta(days=6)
@@ -129,12 +157,35 @@ def insert_appointments_for_existing_patients():
     i = 0
     while start_date <= end_date:
         while i < max_appointments_per_timeslot:
-            appointment_time = start_date.strftime("%Y-%m-%d %H:00")
-            appt = Appointment(appointment_time=appointment_time, nurseID=nurses[n_index].employeeID,
-                               patientID=patients[i].patientID,
-                               vaccine_type=random.choice(vaccine_types))
-            db.session.add(appt)
-            db.session.commit()
+            patientID = patients[i].patientID
+            vaccination_records = VaccinationRecord.query.filter_by(patientID=patientID).all()
+            appointments = Appointment.query.filter_by(patientID=patientID).all()
+            if not appointments:
+                if vaccination_records:
+                    if vaccination_records[0].vaccineID == 1 or vaccination_records[0].vaccineID == 2:
+                        appointment_time = start_date.strftime("%Y-%m-%d %H:00")
+                        vaccineID = vaccination_records[0].vaccineID
+                        vaccine = Vaccine.query.filter_by(vaccineID=vaccineID).first()
+                        appt = Appointment(appointment_time=appointment_time, nurseID=nurses[n_index].employeeID,
+                                           patientID=patientID,
+                                           vaccineID=vaccineID,
+                                           vaccine_type=vaccine_types[int(vaccineID-1)])
+                        vaccine.num_doses -= 1
+                        vaccine.num_on_hold += 1
+                        db.session.add(appt)
+                        db.session.commit()
+                else:
+                    appointment_time = start_date.strftime("%Y-%m-%d %H:00")
+                    vaccineID = random.randrange(1, 4, 1)
+                    vaccine = Vaccine.query.filter_by(vaccineID=vaccineID).first()
+                    appt = Appointment(appointment_time=appointment_time, nurseID=nurses[n_index].employeeID,
+                                       patientID=patientID,
+                                       vaccineID=vaccineID,
+                                       vaccine_type=vaccine_types[vaccineID - 1])
+                    vaccine.num_doses -= 1
+                    vaccine.num_on_hold += 1
+                    db.session.add(appt)
+                    db.session.commit()
             i += 1
             if n_index >= num_nurses or i >= num_patients:
                 return
@@ -173,4 +224,17 @@ def add_to_schedule_tracker(start_time, end_time, nurseID):
         start_time += timedelta(hours=1)
     for time_slot in time_slots:
         time_slot.count += 1
+    db.session.commit()
+
+
+def erase_database():
+    db.session.query(User).delete()
+    db.session.query(Nurse).delete()
+    db.session.query(Patient).delete()
+    db.session.query(NurseSchedule).delete()
+    db.session.query(NurseScheduleTracker).delete()
+    db.session.query(AllNursesScheduleTracker).delete()
+    db.session.query(Appointment).delete()
+    db.session.query(Vaccine).delete()
+    db.session.query(VaccinationRecord).delete()
     db.session.commit()

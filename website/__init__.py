@@ -105,10 +105,25 @@ def insert_appointments():
 
 
 @app.cli.command()
+def insert_vaccination_records():
+    """Insert vaccination records test data into database.
+         'flask insert-vaccination-records'
+    """
+    from website.test.insert_test_data import insert_vaccination_records_for_existing_patients
+    insert_vaccination_records_for_existing_patients()
+
+
+@app.cli.command()
 def create_full_profile_database():
+    """Insert all test data into database.
+         'flask create-full-profile-database'
+    """
     from website.test.insert_test_data import insert_patient_test_data, insert_nurse_test_data, \
                                                 insert_schedules_for_existing_nurses, insert_admin_login_data, \
-                                                  insert_appointments_for_existing_patients, insert_vaccines
+                                                  insert_appointments_for_existing_patients, insert_vaccines, \
+                                                    erase_database, insert_vaccination_records_for_existing_patients
+    print('Deleting all data in DB...')
+    erase_database()
     print('Admin account is being created...')
     time.sleep(2)
     insert_admin_login_data()
@@ -127,7 +142,10 @@ def create_full_profile_database():
     insert_nurse_test_data(100)
     insert_nurse_test_data(100)
     insert_nurse_test_data(100)
-    print('Nurses are getting scheduled to work...')
+    print('Nurses are getting scheduled...')
     insert_schedules_for_existing_nurses()
-    print('Patients are making vaccination appointments...')
+    print('Storing patient vaccination records...')
+    insert_vaccination_records_for_existing_patients()
+    print('Patients are making appointments...')
     insert_appointments_for_existing_patients()
+    print('[Completed]')
