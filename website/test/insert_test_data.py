@@ -90,12 +90,41 @@ def insert_nurse_test_data(add_nurse_count):
         db.session.commit()
 
 
+def fill_schedule_with_appointments(schedule):
+    start_datetime = schedule.start_time
+    end_datetime = schedule.end_time
+    max_appointments = 10
+    patients = Patient.query.all()
+    p_index = 0
+    while start_datetime <= end_datetime:
+        count = 0
+        while count < max_appointments:
+            #print("Scheduling patient ID " + str(p_index) + " with Nurse ID " + str(schedule.nurseID) + ' at ' + str(start_datetime))
+            appointment_time = start_datetime.strftime("%Y-%m-%d %H:00")
+            vaccineID = random.randrange(1, 4, 1)
+            vaccine_type = vaccine_types[vaccineID-1]
+            vaccine = Vaccine.query.filter_by(vaccineID=vaccineID).first()
+            patientID = patients[p_index].patientID
+            appt = Appointment(appointment_time=appointment_time, nurseID=schedule.nurseID,
+                               patientID=patientID,
+                               vaccineID=vaccineID,
+                               vaccine_type=vaccine_type)
+            vaccine.num_doses -= 1
+            vaccine.num_on_hold += 1
+            db.session.add(appt)
+            db.session.commit()
+            p_index += 1
+            count += 1
+        start_datetime += timedelta(hours=1)
+
+
 def insert_schedules_for_existing_nurses():
     """
     Schedule existing nurses for every timeslot starting from two hours from current datetime to 14 days from now.
     """
     start_date = datetime.now() + timedelta(hours=1)
     end_date = start_date + timedelta(days=6)
+    date_to_block = start_date
     nurses = Nurse.query.all()
     num_nurses = len(nurses)
     max_nurses_per_timeslot = 12
@@ -104,15 +133,24 @@ def insert_schedules_for_existing_nurses():
         date_timeslot_str = str(start_date)[:14] + '00'
         start_time = datetime.strptime(date_timeslot_str, "%Y-%m-%d %H:00")
         end_time = start_time + timedelta(hours=8)
-        while i < max_nurses_per_timeslot:
+
+        if start_date == date_to_block:
             schedule = NurseSchedule(nurseID=nurses[i].employeeID, start_time=start_time, end_time=end_time)
             db.session.add(schedule)
             add_to_schedule_tracker(start_time=start_time, end_time=end_time, nurseID=nurses[i].employeeID)
             db.session.commit()
+            fill_schedule_with_appointments(schedule)
             i += 1
-            if i >= num_nurses:
-                return
-        max_nurses_per_timeslot += 12
+        else:
+            while i < max_nurses_per_timeslot:
+                schedule = NurseSchedule(nurseID=nurses[i].employeeID, start_time=start_time, end_time=end_time)
+                db.session.add(schedule)
+                add_to_schedule_tracker(start_time=start_time, end_time=end_time, nurseID=nurses[i].employeeID)
+                db.session.commit()
+                i += 1
+                if i >= num_nurses:
+                    return
+            max_nurses_per_timeslot += 12
         start_date += timedelta(hours=9)
 
 
@@ -146,38 +184,49 @@ def insert_vaccination_records_for_existing_patients():
 
 def insert_appointments_for_existing_patients():
     start_date = datetime.now() + timedelta(hours=1)
-    end_date = start_date + timedelta(days=3)
+    end_date = start_date + timedelta(days=6)
     patients = Patient.query.all()
     nurses = Nurse.query.all()
     max_appts = 100
     num_patients = len(patients)
     num_nurses = len(nurses)
-    n_index = 0
+
+    appointments_start_time = 8
+    appointments_end_time = 20
+
     p_index = 0
     while start_date <= end_date:
+        n_index = 0
         while p_index < max_appts:
+            appointment_time = start_date.strftime("%Y-%m-%d %H:00")
             patientID = patients[p_index].patientID
+            nurseID = nurses[n_index].employeeID
             vaccination_records = VaccinationRecord.query.filter_by(patientID=patientID).all()
-            appointments = Appointment.query.filter_by(patientID=patientID).all()
-            if not appointments:
+            patient_appointments = Appointment.query.filter_by(patientID=patientID).all()
+            nurse = Appointment.query.filter_by(nurseID=nurseID, appointment_time=appointment_time)
+            nurse_scheduled = NurseScheduleTracker.query.filter_by(nurseID=nurseID, timestamp=appointment_time).first()
+            if not patient_appointments and nurse_scheduled and nurse.count() < 10:
+                # print("Nurse #" + str(nurse_schedule.nurseID) +" works at " + nurse_schedule.timestamp)
                 if vaccination_records:
                     if vaccination_records[0].vaccineID == 1 or vaccination_records[0].vaccineID == 2:
-                        appointment_time = start_date.strftime("%Y-%m-%d %H:00")
+                        # appointment_time = start_date.strftime("%Y-%m-%d %H:00")
                         vaccineID = vaccination_records[0].vaccineID
                         vaccine = Vaccine.query.filter_by(vaccineID=vaccineID).first()
-                        appt = Appointment(appointment_time=appointment_time, nurseID=nurses[n_index].employeeID,
+                        appt = Appointment(appointment_time=appointment_time, nurseID=nurseID,
                                            patientID=patientID,
                                            vaccineID=vaccineID,
-                                           vaccine_type=vaccine_types[int(vaccineID-1)])
+                                           vaccine_type=vaccine_types[int(vaccineID - 1)])
                         vaccine.num_doses -= 1
                         vaccine.num_on_hold += 1
                         db.session.add(appt)
                         db.session.commit()
+                        # print('Patient ID ' + str(patientID) + ' scheduled with Nurse ID ' + str(nurses[n_index].employeeID) + ' at ' + appointment_time )
+
                 else:
-                    appointment_time = start_date.strftime("%Y-%m-%d %H:00")
+                    # appointment_time = start_date.strftime("%Y-%m-%d %H:00")
                     vaccineID = random.randrange(1, 4, 1)
                     vaccine = Vaccine.query.filter_by(vaccineID=vaccineID).first()
-                    appt = Appointment(appointment_time=appointment_time, nurseID=nurses[n_index].employeeID,
+                    appt = Appointment(appointment_time=appointment_time, nurseID=nurseID,
                                        patientID=patientID,
                                        vaccineID=vaccineID,
                                        vaccine_type=vaccine_types[vaccineID - 1])
@@ -185,14 +234,17 @@ def insert_appointments_for_existing_patients():
                     vaccine.num_on_hold += 1
                     db.session.add(appt)
                     db.session.commit()
-            p_index += 1
+                    # print('Patient ID ' + str(patientID) + ' scheduled with Nurse ID ' + str(nurses[n_index].employeeID) + ' at ' + appointment_time )
             if p_index % 10 == 0:
                 n_index += 1
+            p_index += 1
             if n_index >= num_nurses or p_index >= num_patients:
                 return
         max_appts += 100
         start_date += timedelta(hours=1)
-
+        if start_date.hour > 20:
+            start_date += timedelta(days=1)
+            start_date = start_date.replace(hour=8)
 
 
 def insert_vaccines():
