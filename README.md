@@ -1,15 +1,24 @@
 # ui-health
+
+# How to Run Application:
 Requirements:
     - Python 3
-    - Visual Studio Code or CMD/Shell
-   
-1. Run the following command in your shell:
+1. Run the following command in your shell from project directory:
     ```Shell
-    pip install -r requirements.txt
+    > pip install -r requirements.txt
+    > python3 main.py
     ```
-2. Open Visual Studio and click Run->Start Debugger and then choose Flask config(use main.py) or "python main.py" from command line
-4. Open http://127.0.0.1:5000/ in a browser
-5. Sign up with 'admin' as email. Password at default will be 'password' to log in as Admin.
+3. Open http://127.0.0.1:5000/ in a browser
+3. Sign up with 'admin' as email. Password at default will be 'password' to log in as Admin (generating test data will automatically create an Admin account)
+
+# Generate Test Data
+Using Flask and the Faker Python library, you can generate test data.
+
+Run command from project directory:
+```Shell
+> set FLASK_APP=main.py
+> flask create-full-profile-database
+```
 
 # Project Description
 UI-Health allows University of Illinois hospital(UIH) to maintain nurse schedules, Covid-19 vaccination appointments, vaccine availability, and patients to sign up for appointments.
@@ -53,3 +62,4 @@ UI-Health allows University of Illinois hospital(UIH) to maintain nurse schedule
 - Nurses Schedules Page - https://codepen.io/oltika/pen/GNvdgV
 - Navbar account dropdown - https://github.com/puikinsh/CoolAdmin
 - Patient calendar - https://fullcalendar.io/demos
+
