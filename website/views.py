@@ -310,12 +310,14 @@ def update_appointment():
 
 @views.route('/create-vaccine-record/<id>/', methods=['GET', 'POST'])
 def create_vaccine_record(id):
+    two = 1 + 1
     oldAppt = Appointment.query.get(id)
     patientID = oldAppt.patientID
     nurseID = oldAppt.nurseID
     vaccine_type = oldAppt.vaccine_type
     vaccine = Vaccine.query.filter_by(company_name=vaccine_type).first()
     vaccineID = vaccine.vaccineID
+
     scheduled_time = oldAppt.appointment_time
     completed = True
     new_vaccine_record = VaccinationRecord(patientID=patientID,nurseID=nurseID,vaccineID=vaccineID,scheduled_time=scheduled_time,completed=completed)

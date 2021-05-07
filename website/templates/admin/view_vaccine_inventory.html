@@ -26,10 +26,10 @@
                                 <th>Vaccine ID</th>
                                 <th>Name</th>
                                 <th>Company</th>
-                                <th>#Doses</th>
-                                <th>#On Hold</th>
+                                <th># Doses Available</th>
+                                <th># On Hold</th>
                                 <th>Description</th>
-                                <th>Number of Doses required</th>
+                                <th># Doses required</th>
                                 <th style="text-align: center;">Action</th>
                             </tr>
                             
@@ -45,8 +45,8 @@
                                 <td>{{row.num_doses_required}}</td>
                                 <td style="width: 155px">
                                     <a href="/update-vaccine/{{row.vaccineID}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.vaccineID}}">Edit</a>
-                                    <a href="{{ url_for('views.create_vaccine_record', id = row.vaccineID)  }}" onclick="return confirm('Are you sure you want to delete this record?')"class="btn btn-danger btn-xs">Delete</a>
-                                </td> 
+                                    <a href="{{ url_for('views.delete_vaccine', id = row.vaccineID)  }}" onclick="return confirm('Are you sure you want to delete this record?')"class="btn btn-danger btn-xs">Delete</a>
+                                </td>
                             </tr>
                         <!-- Modal Edit Vaccine-->
                         <div id="modaledit{{row.vaccineID}}" class="modal fade" role="dialog">
