@@ -29,6 +29,7 @@
                                 <th>#Doses</th>
                                 <th>#On Hold</th>
                                 <th>Description</th>
+                                <th>Number of Doses required</th>
                                 <th style="text-align: center;">Action</th>
                             </tr>
                             
@@ -41,6 +42,7 @@
                                 <td>{{row.num_doses}}</td>
                                 <td>{{row.num_on_hold}}</td>
                                 <td>{{row.description}}</td>
+                                <td>{{row.num_doses_required}}</td>
                                 <td style="width: 155px">
                                     <a href="/update-vaccine/{{row.vaccineID}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.vaccineID}}">Edit</a>
                                     <a href="{{ url_for('views.create_vaccine_record', id = row.vaccineID)  }}" onclick="return confirm('Are you sure you want to delete this record?')"class="btn btn-danger btn-xs">Delete</a>
@@ -75,6 +77,10 @@
                                             <div class="form-group">
                                                 <label>Description:</label>
                                                 <input id="description" type="text" class="form-control" name="description" value="{{row.description}}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label># of Doses Required:</label>
+                                                <input id="num_doses_required" type="text" class="form-control" name="num_doses_required" value="{{row.num_doses_required}}">
                                             </div>
                                             <div class="form-group">
                                                 <button class="btn btn-primary" type="submit">Update</button>
@@ -120,13 +126,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Description(optional)</label>
-                                    <input type="text" class="form-control" name="description" required="1">
+                                    <input type="text" class="form-control" name="description">
                                 </div>
+                                <div class="form-group">
+                                    <label># of Doses Required:</label>
+                                    <input id="num_doses_required" type="text" class="form-control" name="num_doses_required" required="1">
                                 <div class="form-group">
                                     <button class="btn btn-primary" type="submit">Add Vaccine</button>
                                 </div>
                             </form>
-
                         </div>
                         <div class="modal-footer">      
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
