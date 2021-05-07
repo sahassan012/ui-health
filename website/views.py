@@ -177,12 +177,13 @@ def create_vaccine():
         num_doses = request.form['num_doses']
         description = request.form['description']
         num_on_hold = request.form['num_on_hold']
+        num_doses_required = request.form['num_doses_required']
         vaccine_name = Vaccine.query.filter_by(name=name).first()
         if vaccine_name:
             flash('Vaccine name already exists', category='error')
         else:
             new_vaccine = Vaccine(name=name, company_name=company_name, num_doses=num_doses, description=description,
-                                  num_on_hold=num_on_hold)
+                                  num_on_hold=num_on_hold, num_doses_required=num_doses_required)
             db.session.add(new_vaccine)
             db.session.commit()
             flash('Vaccine created!', category='success')

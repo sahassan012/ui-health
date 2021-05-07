@@ -253,7 +253,7 @@ def insert_vaccines():
     pfizer_vaccine = Vaccine(name='pfizer', company_name='pfizer', num_doses=500, description='',
                              num_on_hold=0, num_doses_required=2)
     johnson_vaccine = Vaccine(name='johnson', company_name='johnson', num_doses=500, description='',
-                              num_on_hold=0, num_doses_required=2)
+                              num_on_hold=0, num_doses_required=1)
     db.session.add(moderna_vaccine)
     db.session.add(pfizer_vaccine)
     db.session.add(johnson_vaccine)
