@@ -296,7 +296,38 @@ def view_vaccine_appointments():
                                 Appointment.appointment_time.like(date)).all()
 
     return render_template("/nurse/view_vaccine_appointments.html", user=current_user, appointments=appointments)
-    
+
+@views.route('/update-appointment', methods=['GET', 'POST'])
+def update_appointment():
+    if request.method == 'POST':
+        data = Appointment.query.get(request.form.get('appointmentID'))
+        data.nurse_comment = request.form['comment']
+        db.session.commit()
+        flash('Appointment has been updated')
+        return redirect(url_for('views.view_vaccine_appointments'))
+
+
+@views.route('/create-vaccine-record/<id>/', methods=['GET', 'POST'])
+def create_vaccine_record(id):
+    oldAppt = Appointment.query.get(id)
+    patientID = oldAppt.patientID
+    nurseID = oldAppt.nurseID
+    vaccine_type = oldAppt.vaccine_type
+    vaccine = Vaccine.query.filter_by(company_name=vaccine_type).first()
+    vaccineID = vaccine.vaccineID
+    scheduled_time = oldAppt.appointment_time
+    completed = True
+    new_vaccine_record = VaccinationRecord(patientID=patientID,nurseID=nurseID,vaccineID=vaccineID,scheduled_time=scheduled_time,completed=completed)
+    db.session.add(new_vaccine_record)
+    db.session.commit()
+    flash('Vaccine record created!', category='success')
+
+    db.session.delete(oldAppt)
+    db.session.commit()
+    flash('Appointment Deleted!')
+
+    return redirect(url_for('views.view_vaccine_appointments'))
+
 
 @views.route('/create-nurse-schedule', methods=['POST'])
 def create_nurse_schedule():

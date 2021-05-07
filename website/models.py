@@ -82,5 +82,5 @@ class VaccinationRecord(db.Model, UserMixin):
     patientID = db.Column(db.Integer)
     nurseID = db.Column(db.Integer)
     vaccineID = db.Column(db.Integer)
-    scheduled_time = db.Column(db.DateTime())
+    scheduled_time = db.Column(db.String(35))
     completed = db.Column(db.Boolean)

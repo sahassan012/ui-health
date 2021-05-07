@@ -35,6 +35,21 @@
         #submit:hover{
             background-color: rgb(204, 76, 2);
         }
+        #button{
+            border-radius: 5px;
+            background-color:  rgb(52, 201, 22); 
+            font-weight: bold;
+            margin-left: 0.3em;
+            width: 70%;
+            height: 30px;
+            font-family: Arial;
+            margin-right: 10px;
+            border:none;
+            color: white;
+        }
+        #btn{
+            margin-right: 0.6em;
+        }
     </style>
     <h1 align="center">Vaccination Appointments</h1>
     <div class="container">
@@ -52,6 +67,7 @@
                 <!-- Table headers -->
                 <tr>
                     <th>Patient ID</th>
+                    <th>Time</th>
                     <th>Vaccine Type</th>
                     <th>Comments</th>
                     <th>Status</th>
@@ -61,15 +77,45 @@
                 {% for row in appointments %}
                 <tr>
                     <td>{{row.patientID}}</td>
+                    <td>{{row.appointment_time}}</td>
                     <td>{{row.vaccine_type}}</td>
                     <td>{{row.nurse_comment}}</td>
                     <td style="width: 155px">
                         <div style="display: flex">
-                            <a style="margin-right: 10px; background-color: forestgreen; border:none;" class="btn btn-primary btn-xs" >Done</a>
+                            <a id="btn" class="btn btn-secondary btn-xs" data-toggle="modal" data-target="#modaledit{{row.appointmentID}}">Add Comment</a>
+                            <a href="{{ url_for('views.create_vaccine_record', id = row.appointmentID)  }}"class="btn btn-success btn-xs" >Done</a>
                         </div>
                     </td>
                 </tr>
+
+                <!-- Modal Add Comment-->
+                <div id="modaledit{{row.appointmentID}}" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add Comment</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{url_for('views.update_appointment')}}" method="POST">
+                                    <div class="form-group">
+                                        <input id="comment" type="text" name="comment" class="form-control" value="{{row.nurse_comment}}"><br/>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="hidden" name="appointmentID" value="{{row.appointmentID}}">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: -59px; margin-left: 15px;">
+                                        <button class="btn btn-primary" type="submit">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">      
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
+            <!-- Modal Add Comment end-->    
             </table>
         </div>
     </div>
